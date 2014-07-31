@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<APBIConfig>
+    <Datasource>
+        <URL>jdbc:oracle:thin:@localhost:1521:xe</URL>
+        <username>assort</username>
+    </Datasource>
+    <BI>
+        <Cognos>
+            <username>administrator</username>
+            <password>jda</password>
+            <namespace>CognosExpress</namespace>
+            <ServiceURL>http://localhost:19300/p2pd/servlet/dispatch</ServiceURL>
+            <modelFolder>c:/tempmodel3</modelFolder>
+            <modelFile>model.cpf</modelFile>
+        </Cognos>
+    </BI>
+    <Views>
+        <AttributeViews>
+            <View columns="Name">
+                <AttributeDimensions>A_SC_CP</AttributeDimensions>
+                <Alias>STYLECOLOR_CHANNEL_PHASE</Alias>
+            </View>
+            <View columns="Name" ignore="false">
+                <AttributeDimensions>A_SC_CHNL_RGN</AttributeDimensions>
+                <Alias>STYLECOLOR_CHANNEL_REGION</Alias>
+            </View>
+            <View columns="Name" ignore="true">
+                <AttributeDimensions>A_SC_SUPPLIER</AttributeDimensions>
+                <Alias>STYLECOLOR_SUPPLIER</Alias>
+            </View>
+        </AttributeViews>
+        <HierarchyViews>
+            <View columns="Name" ignore="true">
+                <AttributeDimensions>LOC_CHANNEL</AttributeDimensions>
+                <Alias>LOCATION_CHANNEL</Alias>
+            </View>
+            <View columns="Name">
+                <AttributeDimensions>LOC_CHL_STR</AttributeDimensions>
+                <Alias>LOCATION_CHANNEL_STORE</Alias>
+            </View>
+
+        </HierarchyViews>
+        <PlanViews>
+            <View columns="Id">
+                <PlanID>P_OPT_INT</PlanID>
+                <Alias>INTAKE_HIERARCHY</Alias>
+            </View>
+            <View columns="Id">
+                <PlanID>P_OPT_INT</PlanID>
+                <Alias>INTAKE_HIERARCHY</Alias>
+            </View>
+            <View columns="Id">
+                <PlanID>P_OPT_INT</PlanID>
+                <Alias>INTAKE_HIERARCHY</Alias>
+            </View>
+        </PlanViews>
+        <LookupViews>
+            <View columns="Id">
+                <LookupID>Country_Lkp</LookupID>
+                <Alias>Countries</Alias>
+            </View>
+            <View columns="Id">
+                <PlanID>VAT_Lkp</PlanID>
+                <Alias>VAT Tables</Alias>
+            </View>
+
+        </LookupViews>
+    </Views>
+</APBIConfig>

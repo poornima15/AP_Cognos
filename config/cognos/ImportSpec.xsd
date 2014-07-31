@@ -1,0 +1,157 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ Licensed Materials - Property of IBM
+
+ IBM Cognos Products: fmmd
+
+ (C) Copyright IBM Corp. 2003, 2010
+
+ US Government Users Restricted Rights - Use, duplication or disclosure 
+ restricted by GSA ADP Schedule Contract with IBM Corp.
+-->
+<!--This schema describes a selection specification for importing database metadata.-->
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified" attributeFormDefault="unqualified" version="v0.1.3">
+	<xs:simpleType name="typeEnum">
+		<xs:annotation>
+			<xs:documentation>the types of schema nodes that can exist in metdata sources ("tables" etc. is an artificial level between schema and "table" etc.)</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:NMTOKEN">
+			<xs:enumeration value="namespace"/>
+			<xs:enumeration value="database"/>
+			<xs:enumeration value="catalog"/>
+			<xs:enumeration value="cube"/>
+			<xs:enumeration value="schema"/>
+			<xs:enumeration value="tables"/>
+			<xs:enumeration value="views"/>
+			<xs:enumeration value="synonyms"/>
+			<xs:enumeration value="procedures"/>
+			<xs:enumeration value="proceduresNoFunc"/>
+			<xs:enumeration value="functions"/>
+			<xs:enumeration value="table"/>
+			<xs:enumeration value="view"/>
+			<xs:enumeration value="synonym"/>
+			<xs:enumeration value="procedure"/>
+			<xs:enumeration value="procedureUnknown"/>
+			<xs:enumeration value="function"/>
+			<xs:enumeration value="column"/>
+			<xs:enumeration value="dimension"/>
+			<xs:enumeration value="OLAP_catalog"/>
+			<xs:enumeration value="hierarchy"/>
+			<xs:enumeration value="level"/>
+			<xs:enumeration value="attribute"/>
+			<xs:enumeration value="measures"/>
+			<xs:enumeration value="measure"/>
+			<xs:enumeration value="infoQuery"/>
+			<xs:enumeration value="dimensionGroup"/>
+			<xs:enumeration value="folder"/>
+			<xs:enumeration value="querySubject"/>
+			<xs:enumeration value="filter"/>
+			<xs:enumeration value="calculation"/>
+			<xs:enumeration value="aliasTable"/>
+			<xs:enumeration value="aliasTableLang"/>
+			<xs:enumeration value="sysCatalog"/>
+			<xs:enumeration value="sysSchema"/>
+			<xs:enumeration value="sysObjects"/>
+			<xs:enumeration value="sysTables"/>
+			<xs:enumeration value="sysViews"/>
+			<xs:enumeration value="sysSynonyms"/>
+			<xs:enumeration value="sysTable"/>
+			<xs:enumeration value="sysView"/>
+			<xs:enumeration value="sysSynonym"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="selectEnum">
+		<xs:restriction base="xs:NMTOKEN">
+			<xs:enumeration value="false"/>
+			<xs:enumeration value="true"/>
+			<xs:enumeration value="partial"/>
+			<xs:enumeration value="noEval"/>
+			<xs:enumeration value="unavailable"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="optionEnum">
+		<xs:restriction base="xs:NMTOKEN">
+			<xs:enumeration value="keys"/>
+			<xs:enumeration value="indexes"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:complexType name="itemType">
+		<xs:choice>
+			<xs:element name="namePattern" type="xs:string">
+				<xs:annotation>
+					<xs:documentation>Indicates the parent item is to be browsed (expanded).</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="item" type="itemType" minOccurs="0" maxOccurs="unbounded"/>
+		</xs:choice>
+		<xs:attribute name="Name" type="xs:string" use="required"/>
+		<xs:attribute name="Type" type="typeEnum" use="required"/>
+		<xs:attribute name="Value" type="selectEnum" use="required"/>
+		<xs:attribute name="uniqueName" type="xs:string" use="optional"/>
+		<xs:attribute name="dbType" type="xs:string" use="optional"/>
+		<xs:attribute name="isLeaf" type="xs:boolean" use="optional" default="false"/>
+		<xs:attribute name="isSystem" type="xs:boolean" use="optional" default="false"/>
+		<xs:attribute name="attributeDimensionsAsProperties" type="xs:boolean" use="optional" default="true"/>
+		<xs:attribute name="dualStructures" type="xs:boolean" use="optional" default="true"/>
+	</xs:complexType>
+	<xs:element name="importSpec">
+		<xs:annotation>
+			<xs:documentation>Specifies what to import from a metadata source</xs:documentation>
+		</xs:annotation>
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element name="credentials" minOccurs="0">
+					<xs:annotation>
+						<xs:documentation>access to content manager </xs:documentation>
+					</xs:annotation>
+					<xs:complexType>
+						<xs:simpleContent>
+							<xs:extension base="xs:string">
+								<xs:attribute name="userID" type="xs:string" use="required"/>
+								<xs:attribute name="password" type="xs:string" use="optional"/>
+							</xs:extension>
+						</xs:simpleContent>
+					</xs:complexType>
+				</xs:element>
+				<xs:element name="includeOptions">
+					<xs:annotation>
+						<xs:documentation>what to include all items</xs:documentation>
+					</xs:annotation>
+					<xs:complexType>
+						<xs:sequence>
+							<xs:element name="indexes" type="xs:boolean" minOccurs="0"/>
+							<xs:element name="primaryKeys" type="xs:boolean" minOccurs="0"/>
+							<xs:element name="foriegnKeys" minOccurs="0">
+								<xs:annotation>
+									<xs:documentation>"reach" is the number of step to reach through; unlimited if absent</xs:documentation>
+								</xs:annotation>
+								<xs:complexType>
+									<xs:simpleContent>
+										<xs:extension base="xs:boolean">
+											<xs:attribute name="reach" type="xs:positiveInteger" use="optional"/>
+										</xs:extension>
+									</xs:simpleContent>
+								</xs:complexType>
+							</xs:element>
+							<xs:element name="descriptions" type="xs:boolean" minOccurs="0"/>
+						</xs:sequence>
+					</xs:complexType>
+				</xs:element>
+				<xs:element name="item" type="itemType" minOccurs="0" maxOccurs="unbounded">
+					<xs:annotation>
+						<xs:documentation>an item to include</xs:documentation>
+					</xs:annotation>
+				</xs:element>
+			</xs:sequence>
+			<xs:attribute name="relationshipOnKeys" type="xs:boolean" use="optional" default="false"/>
+			<xs:attribute name="relationshipOnIndexes" type="xs:boolean" use="optional" default="false"/>
+			<xs:attribute name="relationshipOnNames" type="xs:boolean" use="optional" default="false"/>
+			<xs:attribute name="outerJoin" type="xs:boolean" use="optional" default="false"/>
+			<xs:attribute name="insideSelection" type="xs:boolean" use="optional" default="false"/>
+			<xs:attribute name="outsideSelection" type="xs:boolean" use="optional" default="false"/>
+			<xs:attribute name="transformNames" type="xs:boolean" use="optional" default="false"/>
+			<xs:attribute name="uniqueNames" type="xs:boolean" use="optional" default="false"/>
+			<xs:attribute name="displaySummary" type="xs:boolean" use="optional" default="false"/>
+		</xs:complexType>
+	</xs:element>
+</xs:schema>

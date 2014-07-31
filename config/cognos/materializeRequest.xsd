@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ Licensed Materials - Property of IBM
+
+ IBM Cognos Products: fmmd
+
+ (C) Copyright IBM Corp. 2003, 2010
+
+ US Government Users Restricted Rights - Use, duplication or disclosure
+ restricted by GSA ADP Schedule Contract with IBM Corp.
+-->
+<!--
+    Copyright (C) 2008 Cognos ULC, an IBM Company. All rights reserved.
+    Cognos (R) is a trademark of Cognos ULC, (formerly Cognos Incorporated).
+-->
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified" attributeFormDefault="unqualified">
+	<xs:element name="materializeRequest">
+		<xs:complexType>
+			<xs:all>
+				<xs:element name="targetDataSource">
+					<xs:complexType>
+						<xs:sequence maxOccurs="unbounded">
+							<xs:choice>
+								<xs:element name="connectionString" type="xs:string"/>
+								<xs:element name="database" type="xs:string"/>
+								<xs:element name="username" type="xs:string"/>
+								<xs:element name="password" type="xs:string"/>
+							</xs:choice>
+						</xs:sequence>
+						<xs:attribute name="type" use="required">
+							<xs:simpleType>
+								<xs:restriction base="xs:NMTOKEN">
+									<xs:enumeration value="OD"/>
+									<xs:enumeration value="OR"/>
+									<xs:enumeration value="D2"/>
+									<xs:enumeration value="OL"/>
+								</xs:restriction>
+							</xs:simpleType>
+						</xs:attribute>
+					</xs:complexType>
+				</xs:element>
+				<xs:element name="tasks">
+					<xs:complexType>
+						<xs:sequence maxOccurs="unbounded">
+							<xs:element name="task">
+								<xs:simpleType>
+									<xs:restriction base="xs:NMTOKEN">
+										<xs:enumeration value="loadDataFromFile"/>
+										<xs:enumeration value="genLoadDataFromFile"/>
+										<xs:enumeration value="materializeQuerySubject"/>
+										<xs:enumeration value="materializeResultSet"/>
+									</xs:restriction>
+								</xs:simpleType>
+							</xs:element>
+						</xs:sequence>
+					</xs:complexType>
+				</xs:element>
+				<xs:element name="parameters" minOccurs="0">
+					<xs:complexType>
+						<xs:sequence minOccurs="0" maxOccurs="unbounded">
+							<xs:element name="param">
+								<xs:complexType>
+									<xs:attribute name="name" use="required">
+										<xs:simpleType>
+											<xs:restriction base="xs:NMTOKEN">
+												<xs:enumeration value="dataFilePath"/>
+												<xs:enumeration value="tableName"/>
+												<xs:enumeration value="columnDelimiter"/>
+												<xs:enumeration value="rowDelimiter"/>
+												<xs:enumeration value="dataEncoding"/>
+												<xs:enumeration value="objectID"/>
+											</xs:restriction>
+										</xs:simpleType>
+									</xs:attribute>
+									<xs:attribute name="value" type="xs:string" use="optional"/>
+								</xs:complexType>
+							</xs:element>
+						</xs:sequence>
+					</xs:complexType>
+				</xs:element>
+				<xs:element name="metadata" minOccurs="0">
+					<xs:complexType>
+						<xs:attribute name="type" use="optional" default="default">
+							<xs:simpleType>
+								<xs:restriction base="xs:NMTOKEN">
+									<xs:enumeration value="BmtCr1Model"/>
+									<xs:enumeration value="default"/>
+								</xs:restriction>
+							</xs:simpleType>
+						</xs:attribute>
+					</xs:complexType>
+				</xs:element>
+				<xs:element name="resultSet" minOccurs="0">
+					<xs:complexType>
+						<xs:sequence>
+							<xs:any/>
+						</xs:sequence>
+					</xs:complexType>
+				</xs:element>
+			</xs:all>
+		</xs:complexType>
+	</xs:element>
+</xs:schema>

@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ Licensed Materials - Property of IBM
+
+ IBM Cognos Products: fmmd
+
+ (C) Copyright IBM Corp. 2003, 2010
+
+ US Government Users Restricted Rights - Use, duplication or disclosure
+ restricted by GSA ADP Schedule Contract with IBM Corp.
+-->
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified" attributeFormDefault="unqualified">
+	<xs:element name="ENTER_NAME_OF_ROOT_ELEMENT_HERE">
+		<xs:annotation>
+			<xs:documentation>Comment describing your root element</xs:documentation>
+		</xs:annotation>
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element name="ModelItem">
+					<xs:complexType>
+						<xs:sequence>
+							<xs:element name="Path" type="xs:string" maxOccurs="unbounded">
+								<xs:annotation>
+									<xs:documentation>The model id's that are impacted and may exist in reports. These are the model ids we look in the reports for.</xs:documentation>
+								</xs:annotation>
+							</xs:element>
+							<xs:element name="Prop" minOccurs="0">
+								<xs:annotation>
+									<xs:documentation>element included if a property has been modified. Element not rewquired for a delete type change</xs:documentation>
+								</xs:annotation>
+								<xs:complexType>
+									<xs:sequence>
+										<xs:element name="Before" type="xs:string">
+											<xs:annotation>
+												<xs:documentation>Value of the property before the change</xs:documentation>
+											</xs:annotation>
+										</xs:element>
+										<xs:element name="After" type="xs:string">
+											<xs:annotation>
+												<xs:documentation>Vlaue of the model after the change</xs:documentation>
+											</xs:annotation>
+										</xs:element>
+									</xs:sequence>
+									<xs:attribute name="Name" type="xs:string">
+										<xs:annotation>
+											<xs:documentation>Name of the property</xs:documentation>
+										</xs:annotation>
+									</xs:attribute>
+								</xs:complexType>
+							</xs:element>
+						</xs:sequence>
+						<xs:attribute name="type">
+							<xs:annotation>
+								<xs:documentation>The type of differences</xs:documentation>
+							</xs:annotation>
+							<xs:simpleType>
+								<xs:restriction base="xs:NMTOKEN">
+									<xs:enumeration value="Modified"/>
+									<xs:enumeration value="Added"/>
+									<xs:enumeration value="Removed"/>
+								</xs:restriction>
+							</xs:simpleType>
+						</xs:attribute>
+						<xs:attribute name="num" type="xs:unsignedInt">
+							<xs:annotation>
+								<xs:documentation>count starting from 1 for each model item</xs:documentation>
+							</xs:annotation>
+						</xs:attribute>
+						<xs:attribute name="severity">
+							<xs:annotation>
+								<xs:documentation>The severity of the change. Danger implies that the reports referencing the paths will be broken. Info means reports may be impacted but should run.</xs:documentation>
+							</xs:annotation>
+							<xs:simpleType>
+								<xs:restriction base="xs:NMTOKEN">
+									<xs:enumeration value="Danger"/>
+									<xs:enumeration value="Info"/>
+								</xs:restriction>
+							</xs:simpleType>
+						</xs:attribute>
+						<xs:attribute name="Name" type="xs:string">
+							<xs:annotation>
+								<xs:documentation>Object name that is displayed in the impact report</xs:documentation>
+							</xs:annotation>
+						</xs:attribute>
+						<xs:attribute name="lastChangedBy" type="xs:string">
+							<xs:annotation>
+								<xs:documentation>User name of the last person to make the change. This may contain an empty value.</xs:documentation>
+							</xs:annotation>
+						</xs:attribute>
+						<xs:attribute name="lastChanged" type="xs:string">
+							<xs:annotation>
+								<xs:documentation>date and time when the last change for the object was made</xs:documentation>
+							</xs:annotation>
+						</xs:attribute>
+						<xs:attribute name="class" type="xs:string">
+							<xs:annotation>
+								<xs:documentation>object type as a string from the model. Like querySubject, relationship etc.</xs:documentation>
+							</xs:annotation>
+						</xs:attribute>
+						<xs:attribute name="comment" type="xs:string">
+							<xs:annotation>
+								<xs:documentation>develop comment from the model</xs:documentation>
+							</xs:annotation>
+						</xs:attribute>
+						<xs:attribute name="id">
+							<xs:annotation>
+								<xs:documentation>object id of the model item that changed</xs:documentation>
+							</xs:annotation>
+						</xs:attribute>
+					</xs:complexType>
+				</xs:element>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+</xs:schema>

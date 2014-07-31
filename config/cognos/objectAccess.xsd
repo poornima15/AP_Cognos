@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ Licensed Materials - Property of IBM
+
+ IBM Cognos Products: fmmd
+
+ (C) Copyright IBM Corp. 2003, 2010
+
+ US Government Users Restricted Rights - Use, duplication or disclosure 
+ restricted by GSA ADP Schedule Contract with IBM Corp.
+-->
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified" attributeFormDefault="unqualified">
+	<xs:element name="objectAccess">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element name="securityObject" maxOccurs="unbounded">
+					<xs:annotation>
+						<xs:documentation>The value specified for the "cmSearchPath" attribute is expected to be be unique across all instances of this element. If multiple instances are specified with the same "cmSearchPath"value, then only the first instance is processed and the remaining instances are ignored.</xs:documentation>
+					</xs:annotation>
+					<xs:complexType>
+						<xs:sequence>
+							<xs:element name="rule" nillable="false">
+								<xs:simpleType>
+									<xs:restriction base="xs:NMTOKEN">
+										<xs:enumeration value="allow"/>
+										<xs:enumeration value="deny"/>
+										<xs:enumeration value="unspecified"/>
+									</xs:restriction>
+								</xs:simpleType>
+							</xs:element>
+						</xs:sequence>
+						<xs:attribute name="cmSearchPath" type="xs:string" use="required"/>
+						<xs:attribute name="displayPath" type="xs:string" use="required"/>
+						<xs:attribute name="type" use="required">
+							<xs:simpleType>
+								<xs:restriction base="xs:NMTOKEN">
+									<xs:enumeration value="account"/>
+									<xs:enumeration value="group"/>
+									<xs:enumeration value="role"/>
+								</xs:restriction>
+							</xs:simpleType>
+						</xs:attribute>
+					</xs:complexType>
+				</xs:element>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+</xs:schema>

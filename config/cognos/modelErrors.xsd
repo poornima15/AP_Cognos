@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ Licensed Materials - Property of IBM
+
+ IBM Cognos Products: fmmd
+
+ (C) Copyright IBM Corp. 2003, 2010
+
+ US Government Users Restricted Rights - Use, duplication or disclosure
+ restricted by GSA ADP Schedule Contract with IBM Corp.
+-->
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified" attributeFormDefault="unqualified">
+	<xs:element name="modelErrors">
+		<xs:annotation>
+			<xs:documentation>This is the form in which model errors are collected for display and repair purposes.</xs:documentation>
+		</xs:annotation>
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element name="modelError" minOccurs="0" maxOccurs="unbounded">
+					<xs:complexType>
+						<xs:sequence>
+							<xs:element name="refobj" type="xs:string">
+								<xs:annotation>
+									<xs:documentation>This points to the object that contins the error. It corresponds exactly to CR1 refType</xs:documentation>
+								</xs:annotation>
+							</xs:element>
+							<xs:element name="category" type="xs:string">
+								<xs:annotation>
+									<xs:documentation>For "categorizing" related errors.</xs:documentation>
+								</xs:annotation>
+							</xs:element>
+							<xs:element name="error">
+								<xs:annotation>
+									<xs:documentation>The full details of the error, including what repair actions are possible (and which is the default).</xs:documentation>
+								</xs:annotation>
+								<xs:complexType>
+									<xs:sequence>
+										<xs:element name="severity" type="xs:nonNegativeInteger"/>
+										<xs:element name="message" type="xs:string"/>
+									</xs:sequence>
+								</xs:complexType>
+							</xs:element>
+							<xs:element name="repair">
+								<xs:annotation>
+									<xs:documentation>Information regarding (possible) repair action for the message.</xs:documentation>
+								</xs:annotation>
+								<xs:complexType>
+									<xs:sequence>
+										<xs:element name="message" type="xs:string"/>
+									</xs:sequence>
+									<xs:attribute name="id" use="required">
+										<xs:simpleType>
+											<xs:restriction base="xs:NMTOKEN">
+												<xs:enumeration value="None"/>
+												<xs:enumeration value="RemoveObject"/>
+												<xs:enumeration value="FixContainment"/>
+												<xs:enumeration value="ResetAggregateRule"/>
+												<xs:enumeration value="RetargetReferenceValue"/>
+												<xs:enumeration value="AddMissingLocale"/>
+												<xs:enumeration value="UpgradeDeprecatedInfo"/>
+											</xs:restriction>
+										</xs:simpleType>
+									</xs:attribute>
+								</xs:complexType>
+							</xs:element>
+						</xs:sequence>
+					</xs:complexType>
+				</xs:element>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+</xs:schema>

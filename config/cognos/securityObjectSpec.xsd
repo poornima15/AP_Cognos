@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ Licensed Materials - Property of IBM
+
+ IBM Cognos Products: fmmd
+
+ (C) Copyright IBM Corp. 2003, 2010
+
+ US Government Users Restricted Rights - Use, duplication or disclosure 
+ restricted by GSA ADP Schedule Contract with IBM Corp.
+-->
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified" attributeFormDefault="unqualified">
+	<xs:simpleType name="refType">
+		<xs:restriction base="xs:string"/>
+	</xs:simpleType>
+	<xs:element name="securityObjects">
+		<xs:annotation>
+			<xs:documentation>This schema specifies how accounts, groups, and roles are to be passed to and from BMT MD actions.</xs:documentation>
+		</xs:annotation>
+		<xs:complexType>
+			<xs:sequence maxOccurs="unbounded">
+				<xs:element name="securityObject" type="securityObjectType">
+					<xs:annotation>
+						<xs:documentation>An account, group, or role</xs:documentation>
+					</xs:annotation>
+				</xs:element>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+	<xs:complexType name="securityObjectType">
+		<xs:sequence>
+			<xs:element name="displayPath" type="xs:string" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>The (non-localized) display name of the security object</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="cmSearchPath" type="xs:string">
+				<xs:annotation>
+					<xs:documentation>The searchPath (CAM ID) of the security object in CM</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="view" minOccurs="0" maxOccurs="unbounded">
+				<xs:annotation>
+					<xs:documentation>Each instance represents a securityView wherein the securityObject has been specified</xs:documentation>
+				</xs:annotation>
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element name="viewref" type="refType"/>
+						<xs:element name="packageref" minOccurs="0" maxOccurs="unbounded">
+							<xs:annotation>
+								<xs:documentation>The set of packages that include this view.</xs:documentation>
+							</xs:annotation>
+						</xs:element>
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+		</xs:sequence>
+		<xs:attribute name="type" use="required">
+			<xs:simpleType>
+				<xs:restriction base="xs:NMTOKEN">
+					<xs:enumeration value="account"/>
+					<xs:enumeration value="group"/>
+					<xs:enumeration value="role"/>
+				</xs:restriction>
+			</xs:simpleType>
+		</xs:attribute>
+	</xs:complexType>
+</xs:schema>

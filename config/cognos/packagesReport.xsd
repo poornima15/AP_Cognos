@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ Licensed Materials - Property of IBM
+
+ IBM Cognos Products: fmmd
+
+ (C) Copyright IBM Corp. 2003, 2010
+
+ US Government Users Restricted Rights - Use, duplication or disclosure 
+ restricted by GSA ADP Schedule Contract with IBM Corp.
+-->
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified" attributeFormDefault="unqualified">
+	<xs:element name="packages">
+		<xs:annotation>
+			<xs:documentation>Specifies the document returned as the result of GetAllPackages action</xs:documentation>
+		</xs:annotation>
+		<xs:complexType>
+			<xs:sequence minOccurs="0" maxOccurs="unbounded">
+				<xs:element ref="package"/>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="package">
+		<xs:complexType>
+			<xs:attribute name="defaultName" type="xs:string" use="optional"/>
+			<xs:attribute name="cmSearchPath" type="xs:string" use="optional"/>
+		</xs:complexType>
+	</xs:element>
+</xs:schema>

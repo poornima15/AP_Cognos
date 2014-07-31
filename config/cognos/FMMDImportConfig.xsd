@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ Licensed Materials - Property of IBM
+
+ IBM Cognos Products: fmmd
+
+ (C) Copyright IBM Corp. 2003, 2010
+
+ US Government Users Restricted Rights - Use, duplication or disclosure
+ restricted by GSA ADP Schedule Contract with IBM Corp.
+-->
+<!--
+    Copyright (C) 2008 Cognos ULC, an IBM Company. All rights reserved.
+    Cognos (R) is a trademark of Cognos ULC, (formerly Cognos Incorporated).
+-->
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified" attributeFormDefault="unqualified">
+	<xs:complexType name="itemType">
+		<xs:attribute name="name" type="xs:string" use="required"/>
+		<xs:attribute name="value" type="xs:string" use="required"/>
+	</xs:complexType>
+	<xs:complexType name="connectionType">
+		<xs:attribute name="name" type="xs:string" use="required"/>
+		<xs:attribute name="default" type="xs:string"/>
+	</xs:complexType>
+	<xs:element name="importConfig">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element name="source" minOccurs="0" maxOccurs="unbounded">
+					<xs:complexType>
+						<xs:sequence>
+							<xs:element name="capabilities" minOccurs="0">
+								<xs:complexType>
+									<xs:sequence>
+										<xs:element name="item" type="itemType" maxOccurs="unbounded"/>
+									</xs:sequence>
+								</xs:complexType>
+							</xs:element>
+							<xs:element name="connection" minOccurs="0">
+								<xs:complexType>
+									<xs:sequence>
+										<xs:element name="item" type="connectionType" maxOccurs="unbounded"/>
+									</xs:sequence>
+								</xs:complexType>
+							</xs:element>
+						</xs:sequence>
+						<xs:attribute name="type" type="xs:string" use="required"/>
+						<xs:attribute name="queryType" type="xs:string" use="required"/>
+						<xs:attribute name="name" type="xs:string" use="required"/>
+						<xs:attribute name="path" type="xs:string" use="required"/>
+					</xs:complexType>
+				</xs:element>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+</xs:schema>

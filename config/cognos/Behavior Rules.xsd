@@ -1,0 +1,586 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ Licensed Materials - Property of IBM
+
+ IBM Cognos Products: fmmd
+
+ (C) Copyright IBM Corp. 2003, 2010
+
+ US Government Users Restricted Rights - Use, duplication or disclosure 
+ restricted by GSA ADP Schedule Contract with IBM Corp.
+-->
+<xs:schema elementFormDefault="qualified" attributeFormDefault="unqualified" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+	<xs:complexType name="localizableStringType">
+		<xs:attribute name="language" type="xs:language" use="optional" default="en"/>
+		<xs:attribute name="stringTableId" type="xs:string" use="required"/>
+		<xs:attribute name="stringId" type="xs:string" use="required"/>
+	</xs:complexType>
+	<xs:simpleType name="matchPatternType">
+		<xs:restriction base="xs:string"/>
+	</xs:simpleType>
+	<xs:complexType name="mapType">
+		<xs:annotation>
+			<xs:documentation>Defines a mapping rule between an XML Schema and the BMT Model</xs:documentation>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element ref="mapvalue" minOccurs="0" maxOccurs="unbounded"/>
+		</xs:sequence>
+		<xs:attribute name="match" type="matchPatternType" use="required"/>
+		<xs:attribute name="role" use="required">
+			<xs:simpleType>
+				<xs:restriction base="xs:NMTOKEN">
+					<xs:enumeration value="bmt:property"/>
+					<xs:enumeration value="bmt:property:name"/>
+					<xs:enumeration value="bmt:property:description"/>
+					<xs:enumeration value="bmt:property:complex"/>
+					<xs:enumeration value="bmt:property:composite"/>
+					<xs:enumeration value="bmt:property:leftEnd"/>
+					<xs:enumeration value="bmt:property:rightEnd"/>
+					<xs:enumeration value="bmt:property:objref"/>
+					<xs:enumeration value="bmt:object"/>
+					<xs:enumeration value="bmt:object:simple"/>
+					<xs:enumeration value="bmt:object:group"/>
+					<xs:enumeration value="bmt:object:simpleGroup"/>
+					<xs:enumeration value="bmt:object:compound"/>
+					<xs:enumeration value="bmt:object:association"/>
+					<xs:enumeration value="bmt:object:shortcut"/>
+					<xs:enumeration value="bmt:object:project"/>
+				</xs:restriction>
+			</xs:simpleType>
+		</xs:attribute>
+		<xs:attribute name="class" type="xs:string" use="required"/>
+		<xs:attribute name="languageId" type="xs:string" use="optional"/>
+		<xs:attribute name="value" type="matchPatternType" use="optional"/>
+		<xs:attribute name="index" type="xs:boolean" use="optional" default="false"/>
+		<xs:attribute name="allowMissingTarget" type="xs:boolean" use="optional" default="false"/>
+		<xs:attribute name="persist" type="xs:boolean" use="optional" default="false"/>
+	</xs:complexType>
+	<xs:complexType name="actionType">
+		<xs:attribute name="id" use="required">
+			<xs:simpleType>
+				<xs:restriction base="xs:NMTOKEN">
+					<xs:enumeration value="bmt:action:create"/>
+					<xs:enumeration value="bmt:action:createShortcut"/>
+					<xs:enumeration value="bmt:action:delete"/>
+					<xs:enumeration value="bmt:action:display"/>
+					<xs:enumeration value="bmt:action:edit"/>
+					<xs:enumeration value="bmt:action:move"/>
+					<xs:enumeration value="bmt:action:copy"/>
+					<xs:enumeration value="bmt:action:modify"/>
+				</xs:restriction>
+			</xs:simpleType>
+		</xs:attribute>
+		<xs:attribute name="handlerId" type="xs:string" use="required"/>
+	</xs:complexType>
+	<xs:complexType name="actionsType">
+		<xs:sequence>
+			<xs:element name="action" maxOccurs="unbounded">
+				<xs:complexType>
+					<xs:complexContent>
+						<xs:extension base="actionType"/>
+					</xs:complexContent>
+				</xs:complexType>
+			</xs:element>
+			<xs:element name="custom" minOccurs="0" maxOccurs="unbounded">
+				<xs:complexType>
+					<xs:attribute name="id" type="xs:string" use="required"/>
+					<xs:attribute name="handlerId" type="xs:string" use="required"/>
+				</xs:complexType>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="customActionType">
+		<xs:sequence>
+			<xs:element name="label" type="localizableStringType"/>
+			<xs:element name="toolTip" type="localizableStringType" minOccurs="0"/>
+		</xs:sequence>
+		<xs:attribute name="id" type="xs:string" use="required"/>
+	</xs:complexType>
+	<xs:complexType name="customViewType">
+		<xs:attribute name="id" type="xs:string" use="required"/>
+		<xs:attribute name="visible" type="xs:boolean"/>
+		<xs:attribute name="handlerId" type="xs:string" use="required"/>
+	</xs:complexType>
+	<xs:complexType name="extensionsType">
+		<xs:sequence>
+			<xs:element name="handler" type="handlerType" maxOccurs="unbounded"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="helpFileType">
+		<xs:attribute name="id" type="xs:string" use="required"/>
+		<xs:attribute name="src" type="xs:string" use="required"/>
+	</xs:complexType>
+	<xs:complexType name="helpTopicType">
+		<xs:attribute name="helpFileId" type="xs:string" use="required"/>
+		<xs:attribute name="topicId" type="xs:short" use="required"/>
+	</xs:complexType>
+	<xs:complexType name="figureType">
+		<xs:attribute name="state" use="required">
+			<xs:simpleType>
+				<xs:restriction base="xs:NMTOKEN">
+					<xs:enumeration value="normal"/>
+					<xs:enumeration value="collapsed"/>
+					<xs:enumeration value="expanded"/>
+					<xs:enumeration value="shortcut"/>
+					<xs:enumeration value="selected"/>
+				</xs:restriction>
+			</xs:simpleType>
+		</xs:attribute>
+		<xs:attribute name="imageId" type="xs:string" use="required"/>
+		<xs:attribute name="index" type="xs:integer" use="optional" default="0"/>
+	</xs:complexType>
+	<xs:complexType name="imageType">
+		<xs:attribute name="id" type="xs:string" use="required"/>
+		<xs:attribute name="src" type="xs:string" use="required"/>
+		<xs:attribute name="maskColor" type="xs:string" use="optional"/>
+	</xs:complexType>
+	<xs:complexType name="imageListType">
+		<xs:attribute name="id" type="xs:string" use="required"/>
+		<xs:attribute name="width" type="xs:byte" use="optional" default="16"/>
+		<xs:attribute name="height" type="xs:byte" use="optional" default="16"/>
+		<xs:attribute name="count" type="xs:byte" use="required"/>
+		<xs:attribute name="src" type="xs:string" use="required"/>
+		<xs:attribute name="maskColor" type="xs:string" use="optional"/>
+	</xs:complexType>
+	<xs:complexType name="handlerType">
+		<xs:attribute name="id" type="xs:string" use="required"/>
+		<xs:attribute name="type" use="required">
+			<xs:simpleType>
+				<xs:restriction base="xs:NMTOKEN">
+					<xs:enumeration value="win32:dll"/>
+					<xs:enumeration value="html"/>
+				</xs:restriction>
+			</xs:simpleType>
+		</xs:attribute>
+		<xs:attribute name="code" type="xs:string" use="required"/>
+	</xs:complexType>
+	<xs:complexType name="resourcesType">
+		<xs:choice minOccurs="0" maxOccurs="unbounded">
+			<xs:element name="image">
+				<xs:complexType>
+					<xs:complexContent>
+						<xs:extension base="imageType"/>
+					</xs:complexContent>
+				</xs:complexType>
+			</xs:element>
+			<xs:element name="imageList" type="imageListType"/>
+			<xs:element name="helpFile" type="helpFileType"/>
+			<xs:element name="stringTable" type="stringTableType"/>
+		</xs:choice>
+	</xs:complexType>
+	<xs:complexType name="stringTableType">
+		<xs:attribute name="id" type="xs:string" use="required"/>
+		<xs:attribute name="src" type="xs:string" use="required"/>
+	</xs:complexType>
+	<xs:complexType name="viewType">
+		<xs:attribute name="id" use="required">
+			<xs:simpleType>
+				<xs:restriction base="xs:NMTOKEN">
+					<xs:enumeration value="bmt:view:diagram"/>
+					<xs:enumeration value="bmt:view:project"/>
+					<xs:enumeration value="bmt:view:properties"/>
+				</xs:restriction>
+			</xs:simpleType>
+		</xs:attribute>
+		<xs:attribute name="visible" type="xs:boolean" use="required"/>
+		<xs:attribute name="extender" type="xs:string" use="optional"/>
+	</xs:complexType>
+	<xs:complexType name="viewsType">
+		<xs:sequence>
+			<xs:element name="view" type="viewType" minOccurs="0" maxOccurs="unbounded"/>
+			<xs:element name="customView" type="customViewType" minOccurs="0" maxOccurs="unbounded"/>
+		</xs:sequence>
+		<xs:attribute name="base" type="xs:string" use="required"/>
+	</xs:complexType>
+	<xs:complexType name="visibilityType">
+		<xs:annotation>
+			<xs:documentation>visible=display in view; hidden=do not display; collapse=do not display children; suppress=hide me, show my children.</xs:documentation>
+		</xs:annotation>
+		<xs:attribute name="viewId" type="xs:string" use="required"/>
+		<xs:attribute name="visible" use="optional" default="visible">
+			<xs:simpleType>
+				<xs:restriction base="xs:NMTOKEN">
+					<xs:enumeration value="visible"/>
+					<xs:enumeration value="hidden"/>
+					<xs:enumeration value="suppress"/>
+					<xs:enumeration value="collapse"/>
+				</xs:restriction>
+			</xs:simpleType>
+		</xs:attribute>
+	</xs:complexType>
+	<xs:complexType name="visualType">
+		<xs:annotation>
+			<xs:documentation>Defines the a visualization rule for a class of object</xs:documentation>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element name="className" type="localizableStringType" minOccurs="0" maxOccurs="unbounded">
+				<xs:annotation>
+					<xs:documentation>Defines the localizable name for the class.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="description" type="localizableStringType" minOccurs="0" maxOccurs="unbounded">
+				<xs:annotation>
+					<xs:documentation>Defines the localizable description for the class.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="figure" type="figureType" minOccurs="0" maxOccurs="unbounded">
+				<xs:annotation>
+					<xs:documentation>The image used for this class of object.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="helpTopic" type="helpTopicType" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>References a .hlp topic id</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="actions" type="actionsType" minOccurs="0"/>
+			<xs:element name="visibility" type="visibilityType" minOccurs="0" maxOccurs="unbounded"/>
+		</xs:sequence>
+		<xs:attribute name="class" type="xs:string" use="required"/>
+	</xs:complexType>
+	<xs:complexType name="visualsType">
+		<xs:sequence>
+			<xs:element name="customAction" minOccurs="0" maxOccurs="unbounded">
+				<xs:complexType>
+					<xs:complexContent>
+						<xs:extension base="customActionType">
+							<xs:attribute name="multiple" type="xs:boolean" use="optional" default="false"/>
+						</xs:extension>
+					</xs:complexContent>
+				</xs:complexType>
+			</xs:element>
+			<xs:element name="visual" type="visualType" maxOccurs="unbounded"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:element name="behaviorDocument">
+		<xs:annotation>
+			<xs:documentation>Root Element of the Behavior Rule Schema</xs:documentation>
+		</xs:annotation>
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element ref="modelBehaviorRules" minOccurs="0" maxOccurs="unbounded"/>
+				<xs:element ref="PluginList"/>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="modelBehaviorRules">
+		<xs:annotation>
+			<xs:documentation>The model for which these rules apply</xs:documentation>
+		</xs:annotation>
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element ref="mappingSection"/>
+				<xs:element ref="localeReference" minOccurs="0"/>
+				<xs:element ref="designerSection" minOccurs="0"/>
+				<xs:element ref="fmDesignerSection" minOccurs="0"/>
+				<xs:element ref="businessSection" minOccurs="0"/>
+			</xs:sequence>
+			<xs:attribute name="modelType" type="xs:string" use="required"/>
+			<xs:attribute name="modelSchema" type="xs:string" use="required"/>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="mappingSection">
+		<xs:annotation>
+			<xs:documentation>Defines the mapping rules between the a model and the BMT model.</xs:documentation>
+		</xs:annotation>
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element name="map" minOccurs="0" maxOccurs="unbounded">
+					<xs:complexType>
+						<xs:complexContent>
+							<xs:extension base="mapType"/>
+						</xs:complexContent>
+					</xs:complexType>
+				</xs:element>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="designerSection">
+		<xs:annotation>
+			<xs:documentation>Defines the rules for visualizing and interacting with the objects defined in the mapping section.</xs:documentation>
+		</xs:annotation>
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element name="extensions" type="extensionsType" minOccurs="0">
+					<xs:annotation>
+						<xs:documentation>Defines the binaries needed to implement the handlers for the actions defined.</xs:documentation>
+					</xs:annotation>
+				</xs:element>
+				<xs:element name="resources" type="resourcesType" minOccurs="0">
+					<xs:annotation>
+						<xs:documentation>Defines the resources needed to visualize the classes defined.</xs:documentation>
+					</xs:annotation>
+				</xs:element>
+				<xs:element name="views" type="viewsType" minOccurs="0">
+					<xs:annotation>
+						<xs:documentation>Defines the views that will be supported by the BMT.  This includes the specification of default views.</xs:documentation>
+					</xs:annotation>
+				</xs:element>
+				<xs:element name="visuals" type="visualsType" minOccurs="0">
+					<xs:annotation>
+						<xs:documentation>Defines the rules for each class identified in the mappingSection.</xs:documentation>
+					</xs:annotation>
+				</xs:element>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="businessSection">
+		<xs:annotation>
+			<xs:documentation>The semantic rules that enforce the referential integrity of a model within BMT.</xs:documentation>
+		</xs:annotation>
+	</xs:element>
+	<xs:element name="PluginList">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element name="log">
+					<xs:annotation>
+						<xs:documentation>normal loglevel = 2</xs:documentation>
+					</xs:annotation>
+					<xs:complexType>
+						<xs:attribute name="loglevel" type="xs:byte" use="required"/>
+						<xs:attribute name="scripting" type="xs:string" use="required"/>
+					</xs:complexType>
+				</xs:element>
+				<xs:element name="Plugin" maxOccurs="unbounded">
+					<xs:complexType>
+						<xs:sequence maxOccurs="unbounded">
+							<xs:element name="Action">
+								<xs:complexType>
+									<xs:attribute name="Name" type="xs:string" use="required"/>
+									<xs:attribute name="ID" type="xs:unsignedLong" use="required"/>
+									<xs:attribute name="loglevel" type="xs:byte"/>
+								</xs:complexType>
+							</xs:element>
+						</xs:sequence>
+						<xs:attribute name="NodeID" type="xs:string" use="required"/>
+						<xs:attribute name="Name" type="xs:string" use="required"/>
+						<xs:attribute name="InstallPath" type="xs:string" use="required"/>
+					</xs:complexType>
+				</xs:element>
+			</xs:sequence>
+			<xs:attribute name="Version" type="xs:string" use="required"/>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="fmDesignerSection">
+		<xs:annotation>
+			<xs:documentation>The designer section for the Framework Manager ( new UI architecture)</xs:documentation>
+		</xs:annotation>
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element name="extensions" minOccurs="0">
+					<xs:complexType>
+						<xs:sequence>
+							<xs:element name="plugin" minOccurs="0" maxOccurs="unbounded">
+								<xs:complexType>
+									<xs:complexContent>
+										<xs:extension base="fmPluginType">
+											<xs:attribute name="id" type="xs:string" use="required"/>
+										</xs:extension>
+									</xs:complexContent>
+								</xs:complexType>
+							</xs:element>
+						</xs:sequence>
+					</xs:complexType>
+				</xs:element>
+				<xs:element name="resources" minOccurs="0">
+					<xs:complexType>
+						<xs:sequence>
+							<xs:element name="bundle" minOccurs="0" maxOccurs="unbounded">
+								<xs:complexType>
+									<xs:attribute name="lang" type="xs:string" use="optional"/>
+									<xs:attribute name="src" type="xs:string" use="required"/>
+								</xs:complexType>
+							</xs:element>
+						</xs:sequence>
+					</xs:complexType>
+				</xs:element>
+				<xs:element name="components" minOccurs="0">
+					<xs:complexType>
+						<xs:sequence minOccurs="0">
+							<xs:element name="designer" type="fmComponentType" minOccurs="0"/>
+							<xs:element name="view" minOccurs="0" maxOccurs="unbounded">
+								<xs:complexType>
+									<xs:complexContent>
+										<xs:extension base="fmComponentType">
+											<xs:attribute name="id" type="xs:string" use="required"/>
+										</xs:extension>
+									</xs:complexContent>
+								</xs:complexType>
+							</xs:element>
+							<xs:element name="handler" minOccurs="0" maxOccurs="unbounded">
+								<xs:complexType>
+									<xs:complexContent>
+										<xs:extension base="fmComponentType">
+											<xs:attribute name="id" type="xs:string" use="required"/>
+										</xs:extension>
+									</xs:complexContent>
+								</xs:complexType>
+							</xs:element>
+						</xs:sequence>
+					</xs:complexType>
+				</xs:element>
+				<xs:element name="visuals" minOccurs="0">
+					<xs:complexType>
+						<xs:sequence minOccurs="0">
+							<xs:element name="customAction" minOccurs="0" maxOccurs="unbounded">
+								<xs:complexType>
+									<xs:sequence>
+										<xs:element name="label" minOccurs="0">
+											<xs:complexType>
+												<xs:attribute name="stringId" type="xs:string" use="required"/>
+											</xs:complexType>
+										</xs:element>
+										<xs:element name="toolTip" minOccurs="0">
+											<xs:complexType>
+												<xs:attribute name="stringId" type="xs:string" use="required"/>
+											</xs:complexType>
+										</xs:element>
+										<xs:element name="icon" minOccurs="0">
+											<xs:complexType>
+												<xs:attribute name="imageId" type="xs:string" use="required"/>
+											</xs:complexType>
+										</xs:element>
+									</xs:sequence>
+									<xs:attribute name="id" type="xs:string" use="required"/>
+									<xs:attribute name="multiple" type="xs:boolean" use="optional" default="false"/>
+									<xs:attribute name="readOnly" type="xs:boolean" use="optional" default="false">
+										<xs:annotation>
+											<xs:documentation>true if this action does not modify the model.</xs:documentation>
+										</xs:annotation>
+									</xs:attribute>
+									<xs:attribute name="canUndo" type="xs:boolean" use="optional" default="true"/>
+									<xs:attribute name="clearUndoStack" type="xs:boolean" use="optional" default="false"/>
+									<xs:attribute name="enableReadOnly" type="xs:boolean" use="optional" default="false">
+										<xs:annotation>
+											<xs:documentation>true if this action is enabled on a read-only node.  It may change the model, as long as it does not change the node.</xs:documentation>
+										</xs:annotation>
+									</xs:attribute>
+								</xs:complexType>
+							</xs:element>
+							<xs:element name="visual" type="fmVisualClassType" maxOccurs="unbounded"/>
+						</xs:sequence>
+					</xs:complexType>
+				</xs:element>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+	<xs:complexType name="fmExtendableType">
+		<xs:annotation>
+			<xs:documentation>The base type for extendable components</xs:documentation>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element name="extender" type="fmComponentType" minOccurs="0"/>
+			<xs:element name="attribute" type="fmAttributeType" minOccurs="0" maxOccurs="unbounded"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="fmComponentType">
+		<xs:annotation>
+			<xs:documentation>The type describing a UI component</xs:documentation>
+		</xs:annotation>
+		<xs:complexContent>
+			<xs:extension base="fmExtendableType">
+				<xs:attribute name="plugin" type="xs:string" use="required"/>
+				<xs:attribute name="class" type="xs:string" use="required"/>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="fmPluginType">
+		<xs:annotation>
+			<xs:documentation>The type describing a UI plugin</xs:documentation>
+		</xs:annotation>
+		<xs:complexContent>
+			<xs:extension base="fmExtendableType">
+				<xs:attribute name="type" type="xs:string" use="optional" fixed="win32:dll"/>
+				<xs:attribute name="code" type="xs:string" use="required"/>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="fmVisualClassType">
+		<xs:annotation>
+			<xs:documentation>Description of a visual class ( version for the new FM UI architecture)</xs:documentation>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element name="className" minOccurs="0">
+				<xs:complexType>
+					<xs:attribute name="stringId" type="xs:string" use="required"/>
+				</xs:complexType>
+			</xs:element>
+			<xs:element name="description" minOccurs="0">
+				<xs:complexType>
+					<xs:attribute name="stringId" type="xs:string" use="required"/>
+				</xs:complexType>
+			</xs:element>
+			<xs:element name="icon" minOccurs="0" maxOccurs="unbounded">
+				<xs:complexType>
+					<xs:attribute name="imageId" type="xs:string" use="required"/>
+					<xs:attribute name="state" type="xs:string"/>
+					<xs:attribute name="virtualImageId" type="xs:string" use="optional">
+						<xs:annotation>
+							<xs:documentation>Use this icon image when this is a virtual child of a shortcut.</xs:documentation>
+						</xs:annotation>
+					</xs:attribute>
+				</xs:complexType>
+			</xs:element>
+			<xs:element name="actions" minOccurs="0">
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element name="action" minOccurs="0" maxOccurs="unbounded">
+							<xs:complexType>
+								<xs:attribute name="id" type="xs:NMTOKEN" use="required"/>
+								<xs:attribute name="handlerId" type="xs:NMTOKEN" use="required"/>
+							</xs:complexType>
+						</xs:element>
+						<xs:element name="custom" minOccurs="0" maxOccurs="unbounded">
+							<xs:complexType>
+								<xs:attribute name="id" type="xs:NMTOKEN" use="required"/>
+								<xs:attribute name="handlerId" type="xs:NMTOKEN" use="required"/>
+							</xs:complexType>
+						</xs:element>
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+			<xs:element name="classView" minOccurs="0" maxOccurs="unbounded">
+				<xs:complexType>
+					<xs:attribute name="viewId" type="xs:NMTOKEN" use="required"/>
+					<xs:attribute name="default" type="xs:boolean" use="optional" default="false"/>
+				</xs:complexType>
+			</xs:element>
+			<xs:element name="visibility" minOccurs="0" maxOccurs="unbounded">
+				<xs:complexType>
+					<xs:attribute name="viewId" type="xs:NMTOKEN" use="required"/>
+					<xs:attribute name="visible" type="xs:string"/>
+					<xs:attribute name="virtualExpand" type="xs:boolean" use="optional" default="false">
+						<xs:annotation>
+							<xs:documentation>Set this true to allow virtual children to be displayed under shortcuts to this object.</xs:documentation>
+						</xs:annotation>
+					</xs:attribute>
+				</xs:complexType>
+			</xs:element>
+		</xs:sequence>
+		<xs:attribute name="class" type="xs:NMTOKEN" use="required"/>
+	</xs:complexType>
+	<xs:complexType name="fmAttributeType">
+		<xs:annotation>
+			<xs:documentation>Definition of a generic attribute to customize objects of the Extendable type</xs:documentation>
+		</xs:annotation>
+		<xs:attribute name="name" type="xs:string" use="required"/>
+		<xs:attribute name="value" type="xs:string" use="optional"/>
+	</xs:complexType>
+	<xs:element name="mapvalue" type="mapvalueType"/>
+	<xs:complexType name="mapvalueType">
+		<xs:attribute name="enum" type="xs:string" use="required"/>
+		<xs:attribute name="languageId" type="xs:string" use="required"/>
+	</xs:complexType>
+	<xs:element name="localeReference">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element ref="location" minOccurs="0" maxOccurs="unbounded"/>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="location" type="locationType"/>
+	<xs:complexType name="locationType">
+		<xs:attribute name="lang" type="xs:language" use="required"/>
+		<xs:attribute name="href" type="matchPatternType" use="required"/>
+	</xs:complexType>
+</xs:schema>

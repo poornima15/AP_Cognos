@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ Licensed Materials - Property of IBM
+
+ IBM Cognos Products: fmmd
+
+ (C) Copyright IBM Corp. 2003, 2010
+
+ US Government Users Restricted Rights - Use, duplication or disclosure
+ restricted by GSA ADP Schedule Contract with IBM Corp.
+-->
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified" attributeFormDefault="unqualified">
+	<xs:element name="retargetObjectReferences">
+		<xs:annotation>
+			<xs:documentation>This is the form in which model errors are collected for display and repair purposes.</xs:documentation>
+		</xs:annotation>
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element name="entry" maxOccurs="unbounded">
+					<xs:annotation>
+						<xs:documentation>Attrbute "currentRefValue" (which must refer to an existing object) is the key for all instances.</xs:documentation>
+					</xs:annotation>
+					<xs:complexType>
+						<xs:sequence>
+							<xs:element name="updateInfo" maxOccurs="unbounded">
+								<xs:annotation>
+									<xs:documentation>Attrbute "newRefValue" (which must refer to an existing object) is the key for all instances.</xs:documentation>
+								</xs:annotation>
+								<xs:complexType>
+									<xs:choice minOccurs="0" maxOccurs="unbounded">
+										<xs:annotation>
+											<xs:documentation>If "updateInfo" contains no chiildren, then the update will be made to all properties in the model having value of "currentRefValue".</xs:documentation>
+										</xs:annotation>
+										<xs:element name="itemToUpdate">
+											<xs:annotation>
+												<xs:documentation>ID of either an existing object or existing property - same syntax as that found in logs.</xs:documentation>
+											</xs:annotation>
+											<xs:complexType>
+												<xs:simpleContent>
+													<xs:extension base="xs:string">
+														<xs:attribute name="processDescendants" type="xs:boolean" use="required"/>
+													</xs:extension>
+												</xs:simpleContent>
+											</xs:complexType>
+										</xs:element>
+									</xs:choice>
+									<xs:attribute name="newRefValue" type="xs:string" use="required"/>
+								</xs:complexType>
+							</xs:element>
+						</xs:sequence>
+						<xs:attribute name="currentRefValue" type="xs:string" use="required"/>
+					</xs:complexType>
+				</xs:element>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+</xs:schema>

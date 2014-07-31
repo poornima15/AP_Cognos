@@ -1,0 +1,17 @@
+<component name="ArtifactManager">
+  <artifact name="AP_Cognos:jar">
+    <output-path>$PROJECT_DIR$/out/artifacts/AP_Cognos_jar</output-path>
+    <root id="root">
+      <element id="archive" name="AP_Cognos.jar">
+        <element id="module-output" name="AP_Cognos" />
+        <element id="module-test-output" name="AP_Cognos" />
+      </element>
+      <element id="file-copy" path="$PROJECT_DIR$/../AP_Reporting_Toolkit/out/artifacts/AP_Reporting_Toolkit_jar/AP_Reporting_Toolkit.jar" />
+      <element id="library" level="project" name="Maven: org.hamcrest:hamcrest-core:1.3" />
+      <element id="library" level="project" name="Maven: org.jdom:jdom2:2.0.5" />
+      <element id="library" level="application" name="axisCognosClient" />
+      <element id="library" level="project" name="Maven: junit:junit:4.11" />
+      <element id="dir-copy" path="$PROJECT_DIR$/src/main/scripts" />
+    </root>
+  </artifact>
+</component>

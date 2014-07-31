@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema attributeFormDefault="unqualified" elementFormDefault="qualified" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+  <xs:element name="APBIConfig">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="Datasource"/>
+        <xs:element ref="BI"/>
+        <xs:element ref="Views"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="PlanID" type="xs:string"/>
+  <xs:element name="Cognos">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="username"/>
+        <xs:element ref="password"/>
+        <xs:element ref="namespace"/>
+        <xs:element ref="ServiceURL"/>
+        <xs:element ref="modelFolder"/>
+        <xs:element ref="modelFile"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="PlanViews">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="View" maxOccurs="unbounded" minOccurs="0"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="password" type="xs:string"/>
+  <xs:element name="HierarchyViews">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="View" maxOccurs="unbounded" minOccurs="0"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="namespace" type="xs:string"/>
+  <xs:element name="Datasource">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="URL"/>
+        <xs:element ref="username"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="ServiceURL" type="xs:string"/>
+  <xs:element name="AttributeDimensions">
+    <xs:simpleType>
+      <xs:restriction base="xs:string">
+        <xs:enumeration value="A_SC_CP"/>
+        <xs:enumeration value="A_SC_CHNL_RGN"/>
+        <xs:enumeration value="A_SC_SUPPLIER"/>
+        <xs:enumeration value="LOC_CHANNEL"/>
+        <xs:enumeration value="LOC_CHL_STR"/>
+      </xs:restriction>
+    </xs:simpleType>
+  </xs:element>
+  <xs:element name="View">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="AttributeDimensions" minOccurs="0"/>
+        <xs:element ref="PlanID" minOccurs="0"/>
+        <xs:element ref="Alias"/>
+      </xs:sequence>
+      <xs:attribute type="xs:string" name="columns" use="optional"/>
+      <xs:attribute type="xs:string" name="ignore" use="optional"/>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="username">
+    <xs:simpleType>
+      <xs:restriction base="xs:string">
+        <xs:enumeration value="assort"/>
+        <xs:enumeration value="administrator"/>
+      </xs:restriction>
+    </xs:simpleType>
+  </xs:element>
+  <xs:element name="BI">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="Cognos"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="Alias">
+    <xs:simpleType>
+      <xs:restriction base="xs:string">
+        <xs:enumeration value="STYLECOLOR_CHANNEL_PHASE"/>
+        <xs:enumeration value="STYLECOLOR_CHANNEL_REGION"/>
+        <xs:enumeration value="STYLECOLOR_SUPPLIER"/>
+        <xs:enumeration value="LOCATION_CHANNEL"/>
+        <xs:enumeration value="LOCATION_CHANNEL_STORE"/>
+        <xs:enumeration value="INTAKE_HIERARCHY"/>
+      </xs:restriction>
+    </xs:simpleType>
+  </xs:element>
+  <xs:element name="modelFile" type="xs:string"/>
+  <xs:element name="Views">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="AttributeViews"/>
+        <xs:element ref="HierarchyViews"/>
+        <xs:element ref="PlanViews"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="modelFolder" type="xs:string"/>
+  <xs:element name="URL" type="xs:string"/>
+  <xs:element name="AttributeViews">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="View" maxOccurs="unbounded" minOccurs="0"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+</xs:schema>

@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<APBIConfig>
+    <Datasource>
+        <URL>string</URL>
+        <username>string</username>
+    </Datasource>
+    <BI>
+        <Cognos>
+            <username>someInvalidUser</username>
+            <password>jda</password>
+            <namespace>CognosExpress</namespace>
+            <ServiceURL>http://localhost:19300/p2pd/servlet/dispatch</ServiceURL>
+            <modelFolder>c:/tempmodel</modelFolder>
+            <modelFile></modelFile>
+        </Cognos>
+    </BI>
+    <Views>
+        <AttributeViews>
+            <View columns="string">
+                <AttributeDimensions>string</AttributeDimensions>
+                <HierarchyName>string</HierarchyName>
+                <PlanID>string</PlanID>
+                <Alias>SC_CHANNEL_PHASE</Alias>
+            </View>
+        </AttributeViews>
+        <HierarchyViews>
+            <View columns="string">
+                <AttributeDimensions>string</AttributeDimensions>
+                <HierarchyName>string</HierarchyName>
+                <PlanID>string</PlanID>
+                <Alias>PRODUCT_HIERARCHY</Alias>
+            </View>
+        </HierarchyViews>
+        <PlanViews>
+            <View columns="string">
+                <AttributeDimensions>string</AttributeDimensions>
+                <HierarchyName>string</HierarchyName>
+                <PlanID>string</PlanID>
+                <Alias>PRODUCT_HIERARCHY</Alias>
+            </View>
+        </PlanViews>
+    </Views>
+</APBIConfig>

@@ -1,0 +1,42 @@
+<APBIConfig>
+  <Datasource>
+    <URL>string</URL>
+    <username>string</username>
+  </Datasource>
+  <BI>
+    <Cognos>
+      <username>string</username>
+      <password>string</password>
+      <namespace>string</namespace>
+      <ServiceURL>string</ServiceURL>
+      <modelFolder>string</modelFolder>
+      <modelFile>string</modelFile>
+    </Cognos>
+  </BI>
+  <Views>
+    <AttributeViews>
+      <View columns="string">
+        <AttributeDimensions>string</AttributeDimensions>
+        <HierarchyName>string</HierarchyName>
+        <PlanID>string</PlanID>
+        <Alias>PRODUCT_HIERARCHY</Alias>
+      </View>
+    </AttributeViews>
+    <HierarchyViews>
+      <View columns="string">
+        <AttributeDimensions>string</AttributeDimensions>
+        <HierarchyName>string</HierarchyName>
+        <PlanID>string</PlanID>
+        <Alias>SC_CHANNEL_PHASE</Alias>
+      </View>
+    </HierarchyViews>
+    <PlanViews>
+      <View columns="string">
+        <AttributeDimensions>string</AttributeDimensions>
+        <HierarchyName>string</HierarchyName>
+        <PlanID>string</PlanID>
+        <Alias>SC_CHANNEL_PHASE</Alias>
+      </View>
+    </PlanViews>
+  </Views>
+</APBIConfig>
