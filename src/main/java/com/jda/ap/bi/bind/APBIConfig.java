@@ -37,17 +37,17 @@ import javax.xml.bind.annotation.XmlType;
     "views"
 })
 @XmlRootElement(name = "APBIConfig")
-@Generated(value = "com.sun.tools.internal.xjc.Driver", date = "2014-07-30T04:31:03-06:00", comments = "JAXB RI v2.2.4-2")
+@Generated(value = "com.sun.tools.internal.xjc.Driver", date = "2014-07-31T10:48:19-06:00", comments = "JAXB RI v2.2.4-2")
 public class APBIConfig {
 
     @XmlElement(name = "Datasource", required = true)
-    @Generated(value = "com.sun.tools.internal.xjc.Driver", date = "2014-07-30T04:31:03-06:00", comments = "JAXB RI v2.2.4-2")
+    @Generated(value = "com.sun.tools.internal.xjc.Driver", date = "2014-07-31T10:48:19-06:00", comments = "JAXB RI v2.2.4-2")
     protected Datasource datasource;
     @XmlElement(name = "BI", required = true)
-    @Generated(value = "com.sun.tools.internal.xjc.Driver", date = "2014-07-30T04:31:03-06:00", comments = "JAXB RI v2.2.4-2")
+    @Generated(value = "com.sun.tools.internal.xjc.Driver", date = "2014-07-31T10:48:19-06:00", comments = "JAXB RI v2.2.4-2")
     protected BI bi;
     @XmlElement(name = "Views", required = true)
-    @Generated(value = "com.sun.tools.internal.xjc.Driver", date = "2014-07-30T04:31:03-06:00", comments = "JAXB RI v2.2.4-2")
+    @Generated(value = "com.sun.tools.internal.xjc.Driver", date = "2014-07-31T10:48:19-06:00", comments = "JAXB RI v2.2.4-2")
     protected Views views;
 
     /**
@@ -58,7 +58,7 @@ public class APBIConfig {
      *     {@link Datasource }
      *     
      */
-    @Generated(value = "com.sun.tools.internal.xjc.Driver", date = "2014-07-30T04:31:03-06:00", comments = "JAXB RI v2.2.4-2")
+    @Generated(value = "com.sun.tools.internal.xjc.Driver", date = "2014-07-31T10:48:19-06:00", comments = "JAXB RI v2.2.4-2")
     public Datasource getDatasource() {
         return datasource;
     }
@@ -71,7 +71,7 @@ public class APBIConfig {
      *     {@link Datasource }
      *     
      */
-    @Generated(value = "com.sun.tools.internal.xjc.Driver", date = "2014-07-30T04:31:03-06:00", comments = "JAXB RI v2.2.4-2")
+    @Generated(value = "com.sun.tools.internal.xjc.Driver", date = "2014-07-31T10:48:19-06:00", comments = "JAXB RI v2.2.4-2")
     public void setDatasource(Datasource value) {
         this.datasource = value;
     }
@@ -84,7 +84,7 @@ public class APBIConfig {
      *     {@link BI }
      *     
      */
-    @Generated(value = "com.sun.tools.internal.xjc.Driver", date = "2014-07-30T04:31:03-06:00", comments = "JAXB RI v2.2.4-2")
+    @Generated(value = "com.sun.tools.internal.xjc.Driver", date = "2014-07-31T10:48:19-06:00", comments = "JAXB RI v2.2.4-2")
     public BI getBI() {
         return bi;
     }
@@ -97,7 +97,7 @@ public class APBIConfig {
      *     {@link BI }
      *     
      */
-    @Generated(value = "com.sun.tools.internal.xjc.Driver", date = "2014-07-30T04:31:03-06:00", comments = "JAXB RI v2.2.4-2")
+    @Generated(value = "com.sun.tools.internal.xjc.Driver", date = "2014-07-31T10:48:19-06:00", comments = "JAXB RI v2.2.4-2")
     public void setBI(BI value) {
         this.bi = value;
     }
@@ -110,7 +110,7 @@ public class APBIConfig {
      *     {@link Views }
      *     
      */
-    @Generated(value = "com.sun.tools.internal.xjc.Driver", date = "2014-07-30T04:31:03-06:00", comments = "JAXB RI v2.2.4-2")
+    @Generated(value = "com.sun.tools.internal.xjc.Driver", date = "2014-07-31T10:48:19-06:00", comments = "JAXB RI v2.2.4-2")
     public Views getViews() {
         return views;
     }
@@ -123,7 +123,7 @@ public class APBIConfig {
      *     {@link Views }
      *     
      */
-    @Generated(value = "com.sun.tools.internal.xjc.Driver", date = "2014-07-30T04:31:03-06:00", comments = "JAXB RI v2.2.4-2")
+    @Generated(value = "com.sun.tools.internal.xjc.Driver", date = "2014-07-31T10:48:19-06:00", comments = "JAXB RI v2.2.4-2")
     public void setViews(Views value) {
         this.views = value;
     }

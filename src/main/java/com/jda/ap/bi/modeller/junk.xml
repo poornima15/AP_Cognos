@@ -1,0 +1,55 @@
+<determinants>
+
+    <determinant>
+        <name>Channel</name>
+        <key>
+            <refobj>[Hierarchies].[LOC_CHANNEL_REP_VIEW_HIER].[CHANNEL_ID]</refobj>
+        </key>
+        <attributes>
+            <refobj>[Hierarchies].[LOC_CHANNEL_REP_VIEW_HIER].[CHANNEL_NAME]</refobj>
+        </attributes>
+        <canGroup>true</canGroup>
+        <identifiesRow>false</identifiesRow>
+    </determinant>
+
+
+    <determinant>
+        <name>Channel Region</name>
+        <key>
+            <refobj>[Hierarchies].[LOC_CHANNEL_REP_VIEW_HIER].[CHNL_REGION_ID]</refobj>
+        </key>
+        <attributes>
+            <refobj>[Hierarchies].[LOC_CHANNEL_REP_VIEW_HIER].[CHNL_REGION_NAME]</refobj>
+        </attributes>
+        <canGroup>true</canGroup>
+        <identifiesRow>false</identifiesRow>
+    </determinant>
+    <determinant>
+        <name>Node</name>
+        <key>
+            <refobj>[Hierarchies].[LOC_CHANNEL_REP_VIEW_HIER].[NODE_ID]</refobj>
+        </key>
+        <attributes>
+            <refobj>[Hierarchies].[LOC_CHANNEL_REP_VIEW_HIER].[NODE_NAME]</refobj>
+        </attributes>
+        <canGroup>true</canGroup>
+        <identifiesRow>false</identifiesRow>
+    </determinant>
+    <determinant>
+        <name>Node DC</name>
+        <key>
+            <refobj>[Hierarchies].[LOC_CHANNEL_REP_VIEW_HIER].[NODE_DC_ID]</refobj>
+        </key>
+        <attributes>
+            <refobj>[Hierarchies].[LOC_CHANNEL_REP_VIEW_HIER].[CHANNEL_ID]</refobj>
+            <refobj>[Hierarchies].[LOC_CHANNEL_REP_VIEW_HIER].[CHANNEL_NAME]</refobj>
+            <refobj>[Hierarchies].[LOC_CHANNEL_REP_VIEW_HIER].[CHNL_REGION_ID]</refobj>
+            <refobj>[Hierarchies].[LOC_CHANNEL_REP_VIEW_HIER].[CHNL_REGION_NAME]</refobj>
+            <refobj>[Hierarchies].[LOC_CHANNEL_REP_VIEW_HIER].[NODE_ID]</refobj>
+            <refobj>[Hierarchies].[LOC_CHANNEL_REP_VIEW_HIER].[NODE_NAME]</refobj>
+            <refobj>[Hierarchies].[LOC_CHANNEL_REP_VIEW_HIER].[NODE_DC_NAME]</refobj>
+        </attributes>
+        <canGroup>false</canGroup>
+        <identifiesRow>true</identifiesRow>
+    </determinant>
+</determinants>

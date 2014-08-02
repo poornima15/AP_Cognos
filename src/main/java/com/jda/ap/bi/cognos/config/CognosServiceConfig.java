@@ -248,19 +248,21 @@ public final class CognosServiceConfig implements IServiceConfig
      * @param formParams
      */
     @Override
-    public void setConfigFromForm(ViewTypeEnum type, Set<Map.Entry<String, List<String>>> formParams)
+    public void setConfigFromForm(ViewTypeEnum type, Set<Map.Entry<String, List<String>>> formParams) throws BIConfigException
     {
 
         log.info("Saving form data...");
-        Iterator<Map.Entry<String,List<String>>> formParamIter = formParams.iterator();
+        Iterator<Map.Entry<String, List<String>>> formParamIter = formParams.iterator();
         ConfigUtil configUtil = ConfigUtil.getInstance(this);
 
-        while ( formParamIter.hasNext()) {
-            Map.Entry<String,List<String>> entry = formParamIter.next();
+
+        while (formParamIter.hasNext())
+        {
+            Map.Entry<String, List<String>> entry = formParamIter.next();
             // handle alias requests
-            if ( entry.getKey().indexOf("alias__") != -1 )
+            if (entry.getKey().indexOf("alias__") != -1)
             {
-                String viewName = entry.getKey().replace("alias__","");
+                String viewName = entry.getKey().replace("alias__", "");
                 // just get the first entry
                 String alias = entry.getValue().get(0);
                 log.info("Processing: " + viewName);
@@ -279,10 +281,7 @@ public final class CognosServiceConfig implements IServiceConfig
             }
 
 
-
         }
-
-
 
 
     }

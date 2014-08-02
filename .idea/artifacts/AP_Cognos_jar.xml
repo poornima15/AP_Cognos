@@ -1,5 +1,5 @@
 <component name="ArtifactManager">
-  <artifact name="AP_Cognos:jar">
+  <artifact build-on-make="true" name="AP_Cognos:jar">
     <output-path>$PROJECT_DIR$/out/artifacts/AP_Cognos_jar</output-path>
     <root id="root">
       <element id="archive" name="AP_Cognos.jar">

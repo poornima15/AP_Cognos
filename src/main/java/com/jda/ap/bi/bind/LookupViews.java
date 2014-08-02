@@ -35,11 +35,11 @@ import javax.xml.bind.annotation.XmlType;
     "view"
 })
 @XmlRootElement(name = "LookupViews")
-@Generated(value = "com.sun.tools.internal.xjc.Driver", date = "2014-07-30T04:31:03-06:00", comments = "JAXB RI v2.2.4-2")
+@Generated(value = "com.sun.tools.internal.xjc.Driver", date = "2014-07-31T10:48:19-06:00", comments = "JAXB RI v2.2.4-2")
 public class LookupViews {
 
     @XmlElement(name = "View")
-    @Generated(value = "com.sun.tools.internal.xjc.Driver", date = "2014-07-30T04:31:03-06:00", comments = "JAXB RI v2.2.4-2")
+    @Generated(value = "com.sun.tools.internal.xjc.Driver", date = "2014-07-31T10:48:19-06:00", comments = "JAXB RI v2.2.4-2")
     protected List<View> view;
 
     /**
@@ -64,7 +64,7 @@ public class LookupViews {
      * 
      * 
      */
-    @Generated(value = "com.sun.tools.internal.xjc.Driver", date = "2014-07-30T04:31:03-06:00", comments = "JAXB RI v2.2.4-2")
+    @Generated(value = "com.sun.tools.internal.xjc.Driver", date = "2014-07-31T10:48:19-06:00", comments = "JAXB RI v2.2.4-2")
     public List<View> getView() {
         if (view == null) {
             view = new ArrayList<View>();

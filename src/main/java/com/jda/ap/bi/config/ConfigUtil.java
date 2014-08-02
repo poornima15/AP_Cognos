@@ -32,7 +32,7 @@ public class ConfigUtil
     {
 
         _config = config;
-        log.info("Got config: " + _config);
+        log.finer("Got config: " + _config);
     }
 
 
@@ -44,8 +44,29 @@ public class ConfigUtil
      */
     public String getHierarchyAlias(String name)
     {
-        log.info("Getting hierarchy alias for: " + name);
+        log.finer("Getting hierarchy alias for: " + name);
+        if ( _config.getServiceConfig().getViews().getHierarchyViews() == null ) {
+            log.finer("No hierarchy views found");
+            return null;
+        }
+        for (View view : _config.getServiceConfig().getViews().getHierarchyViews().getView())
+        {
+
+            if (view.getName().equalsIgnoreCase(name))
+            {
+                log.finer("Alias: " + view.getAlias());
+                return view.getAlias();
+            }
+        }
+
+        log.finer("No alias found for: " + name);
         return null;
+    }
+
+    public String getLookupAlias(String name)
+    {
+        log.finer("Getting lookup alias for: " + name);
+        return name;
     }
 
 
@@ -65,6 +86,10 @@ public class ConfigUtil
             {
                 return getAttributeView(name);
             }
+            case LOOKUP:
+            {
+                return getLookupView(name);
+            }
         }
 
         throw new ViewNotFoundException(name);
@@ -80,16 +105,21 @@ public class ConfigUtil
     public String getAttributeAlias(String name)
     {
         log.info("Getting attribute alias for: " + name);
-
+        if ( _config.getServiceConfig().getViews().getAttributeViews() == null ) {
+            log.info("No attribute views found");
+            return null;
+        }
         for (View view : _config.getServiceConfig().getViews().getAttributeViews().getView())
         {
 
-            if (view.getAttributeDimensions().equalsIgnoreCase(name))
+            if (view.getName().equalsIgnoreCase(name))
             {
+                log.finer("Alias: " + view.getAlias());
                 return view.getAlias();
             }
         }
 
+        log.fine("No alias found for: " + name);
         return null;
     }
 
@@ -103,10 +133,13 @@ public class ConfigUtil
     {
         log.info("Getting plan alias for: " + name);
 
+        if ( _config.getServiceConfig().getViews().getPlanViews() == null ) {
+            return null;
+        }
         for (View view : _config.getServiceConfig().getViews().getPlanViews().getView())
         {
 
-            if (view.getAttributeDimensions().equalsIgnoreCase(name))
+            if (view.getName().equalsIgnoreCase(name))
             {
                 return view.getAlias();
             }
@@ -124,10 +157,41 @@ public class ConfigUtil
      */
     public View getAttributeView(String viewName) throws ViewNotFoundException
     {
+        if ( _config.getServiceConfig().getViews().getAttributeViews() == null ) {
+            throw new ViewNotFoundException(viewName);
+
+        }
         for (View view : _config.getServiceConfig().getViews().getAttributeViews().getView())
         {
 
-            if (view.getAttributeDimensions().equalsIgnoreCase(viewName))
+            if (view.getName().equalsIgnoreCase(viewName))
+            {
+                return view;
+            }
+        }
+
+        throw new ViewNotFoundException(viewName);
+    }
+
+
+    /**
+     *
+     * Get lookup view
+     *
+     * @param viewName
+     * @return
+     * @throws ViewNotFoundException
+     */
+    public View getLookupView(String viewName) throws ViewNotFoundException
+    {
+        if ( _config.getServiceConfig().getViews().getLookupViews() == null ) {
+            throw new ViewNotFoundException(viewName);
+
+        }
+        for (View view : _config.getServiceConfig().getViews().getLookupViews().getView())
+        {
+
+            if (view.getName().equalsIgnoreCase(viewName))
             {
                 return view;
             }
@@ -146,9 +210,13 @@ public class ConfigUtil
      */
     public View getPlanView(String viewName) throws ViewNotFoundException
     {
+        if ( _config.getServiceConfig().getViews().getPlanViews() == null ) {
+            throw new ViewNotFoundException(viewName);
+
+        }
         for (View view : _config.getServiceConfig().getViews().getPlanViews().getView())
         {
-            if (view.getAttributeDimensions().equalsIgnoreCase(viewName))
+            if (view.getName().equalsIgnoreCase(viewName))
             {
                 return view;
             }
@@ -166,9 +234,13 @@ public class ConfigUtil
      */
     public View getHierarchyView(String viewName) throws ViewNotFoundException
     {
+        if ( _config.getServiceConfig().getViews().getHierarchyViews() == null ) {
+            throw new ViewNotFoundException(viewName);
+
+        }
         for (View view : _config.getServiceConfig().getViews().getHierarchyViews().getView())
         {
-            if (view.getAttributeDimensions().equalsIgnoreCase(viewName))
+            if (view.getName().equalsIgnoreCase(viewName))
             {
                 return view;
             }
@@ -187,7 +259,6 @@ public class ConfigUtil
     {
         switch (type)
         {
-            //@todo add plan/hierarchy additions
             case ATTRIBUTE:
             {
                 View newView = new View();
@@ -201,8 +272,62 @@ public class ConfigUtil
                     newView.setAlias(viewName);
                 }
                 newView.setIgnore("false");
-                newView.setAttributeDimensions(viewName);
+                newView.setName(viewName);
                 _config.getServiceConfig().getViews().getAttributeViews().getView().add(newView);
+                break;
+            }
+            case HIERARCHY:
+            {
+                View newView = new View();
+                newView.setColumns("Name");
+                if (alias != null)
+                {
+                    newView.setAlias(alias);
+                }
+                else
+                {
+                    newView.setAlias(viewName);
+                }
+                newView.setIgnore("false");
+                newView.setName(viewName);
+                _config.getServiceConfig().getViews().getHierarchyViews().getView().add(newView);
+
+                break;
+            }
+            case PLAN:
+            {
+                View newView = new View();
+                newView.setColumns("Name");
+                if (alias != null)
+                {
+                    newView.setAlias(alias);
+                }
+                else
+                {
+                    newView.setAlias(viewName);
+                }
+                newView.setIgnore("false");
+                newView.setName(viewName);
+                _config.getServiceConfig().getViews().getPlanViews().getView().add(newView);
+
+                break;
+            }
+            case LOOKUP:
+            {
+                View newView = new View();
+                newView.setColumns("Name");
+                if (alias != null)
+                {
+                    newView.setAlias(alias);
+                }
+                else
+                {
+                    newView.setAlias(viewName);
+                }
+                newView.setIgnore("false");
+                newView.setName(viewName);
+                _config.getServiceConfig().getViews().getLookupViews().getView().add(newView);
+
                 break;
             }
         }

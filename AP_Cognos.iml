@@ -14,6 +14,17 @@
     <orderEntry type="module-library" scope="PROVIDED">
       <library>
         <CLASSES>
+          <root url="jar://$MODULE_DIR$/../AP_Reporting_Toolkit/out/artifacts/AP_Report_Metadata_jar/AP_Report_Metadata.jar!/" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES>
+          <root url="file://$MODULE_DIR$/../AP_Reporting_Toolkit/AP_Report_Metadata/src" />
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library" scope="PROVIDED">
+      <library>
+        <CLASSES>
           <root url="jar://$MODULE_DIR$/../AP_Reporting_Toolkit/out/artifacts/AP_Reporting_Toolkit_jar/AP_Reporting_Toolkit.jar!/" />
         </CLASSES>
         <JAVADOC />

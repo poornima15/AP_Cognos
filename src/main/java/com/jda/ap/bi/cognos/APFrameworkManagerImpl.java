@@ -27,6 +27,8 @@ import com.jda.ap.bi.cognos.exception.FrameworkManagerException;
 import com.jda.ap.bi.enums.ModelCommandEnum;
 import com.jda.ap.bi.enums.ScriptPlaceholderEnum;
 import com.jda.ap.bi.modeller.Modeller;
+import com.sun.xml.internal.bind.marshaller.CharacterEscapeHandler;
+import com.sun.xml.internal.bind.marshaller.DataWriter;
 import org.apache.axis.AxisFault;
 import org.apache.axis.client.Stub;
 import org.apache.axis.message.SOAPHeaderElement;
@@ -35,9 +37,7 @@ import javax.xml.bind.JAXBContext;
 import javax.xml.bind.Marshaller;
 import javax.xml.namespace.QName;
 import javax.xml.rpc.ServiceException;
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileWriter;
+import java.io.*;
 import java.net.MalformedURLException;
 import java.rmi.RemoteException;
 import java.text.DateFormat;
@@ -127,7 +127,8 @@ public class APFrameworkManagerImpl extends BIModelServices
     public String createNewModel(String model) throws FrameworkManagerException
     {
         StringBuilder response = new StringBuilder();
-        log.info("Creating new model: " + model);
+        String modelName = model.replace(".xml",".cpf");
+        log.info("Creating new model: " + modelName);
         try
         {
             // connect to the service first
@@ -146,7 +147,7 @@ public class APFrameworkManagerImpl extends BIModelServices
 
             createRequest
                     .append("<mdprovider type=\"generic\" action=\"createModel\" model=\""
-                            + model + "\"/>");
+                            + modelName + "\"/>");
 
             String result = null;
             XmlEncodedXML xmlActionXml = new XmlEncodedXML();
@@ -168,7 +169,7 @@ public class APFrameworkManagerImpl extends BIModelServices
             }
             updateRequest2
                     .append("<mdprovider type=\"generic\" action=\"saveModel\" model=\""
-                            + model + "\"/>");
+                            + modelName + "\"/>");
             xmlActionXml = new XmlEncodedXML();
             xmlActionXml.set_value(updateRequest2.toString());
             result = (getMetadataService().updateMetadata(xmlActionXml))
@@ -188,7 +189,7 @@ public class APFrameworkManagerImpl extends BIModelServices
             }
             updateRequest3
                     .append("<mdprovider type=\"generic\" action=\"closeModel\" model=\""
-                            + model + "\"/>");
+                            + modelName + "\"/>");
             xmlActionXml = new XmlEncodedXML();
             xmlActionXml.set_value(updateRequest3.toString());
             result = (getMetadataService().updateMetadata(xmlActionXml))
@@ -302,6 +303,7 @@ public class APFrameworkManagerImpl extends BIModelServices
      */
     private String saveProject(String projectLocation) throws Exception
     {
+        log.info("Saving model : " + projectLocation);
         return getMetadataService()
                 .updateMetadata(new XmlEncodedXML("<mdprovider type=\"generic\" action=\"saveModel\" model=\""
                         + projectLocation + "\"/>")).toString();
@@ -826,17 +828,34 @@ public class APFrameworkManagerImpl extends BIModelServices
     {
         connectToService();
         Modeller modeller = getModeller();
-        Project project = modeller.createAPModel(modelFile);
+        Project project = null;
         try
         {
+            project = modeller.createAPModel(modelFile);
             log.info("Generating project from AP data...");
             // replace existing model file with new project
             JAXBContext jaxbContext = JAXBContext.newInstance(Project.class);
             Marshaller marshaller = jaxbContext.createMarshaller();
             marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT,true);
+            marshaller.setProperty(Marshaller.JAXB_ENCODING,"UTF-8");
             FileWriter fw = new FileWriter(modelFile);
+            // this is required because some elements within the schema need to have nested tags
+            // for example <expression><refobj>...</refobj></expression> and the expression object
+            // only takes a string an not another JAXBElement as a child param
+            DataWriter dataWriter = new DataWriter(fw, "UTF-8", new CharacterEscapeHandler()
+            {
+                @Override
+                public void escape(char[] buf, int start, int len, boolean isAttValue,
+                                   Writer out) throws IOException {
 
-            marshaller.marshal(project, fw);
+                    for (int i = start; i < start + len; i++) {
+                        char ch = buf[i];
+                        out.write(ch);
+                    }
+                }
+            });
+
+            marshaller.marshal(project, dataWriter);
             fw.close();
             log.info("Saving project...");
             saveProject(modelFile.getAbsolutePath());

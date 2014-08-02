@@ -24,12 +24,10 @@ import javax.xml.namespace.QName;
 @XmlRegistry
 public class ObjectFactory {
 
-    private final static QName _AttributeDimensions_QNAME = new QName("", "AttributeDimensions");
+    private final static QName _Name_QNAME = new QName("", "Name");
     private final static QName _ServiceURL_QNAME = new QName("", "ServiceURL");
     private final static QName _Username_QNAME = new QName("", "username");
-    private final static QName _LookupID_QNAME = new QName("", "LookupID");
     private final static QName _Alias_QNAME = new QName("", "Alias");
-    private final static QName _PlanID_QNAME = new QName("", "PlanID");
     private final static QName _ModelFile_QNAME = new QName("", "modelFile");
     private final static QName _ModelFolder_QNAME = new QName("", "modelFolder");
     private final static QName _URL_QNAME = new QName("", "URL");
@@ -127,9 +125,9 @@ public class ObjectFactory {
      * Create an instance of {@link JAXBElement }{@code <}{@link String }{@code >}}
      * 
      */
-    @XmlElementDecl(namespace = "", name = "AttributeDimensions")
-    public JAXBElement<String> createAttributeDimensions(String value) {
-        return new JAXBElement<String>(_AttributeDimensions_QNAME, String.class, null, value);
+    @XmlElementDecl(namespace = "", name = "Name")
+    public JAXBElement<String> createName(String value) {
+        return new JAXBElement<String>(_Name_QNAME, String.class, null, value);
     }
 
     /**
@@ -154,27 +152,9 @@ public class ObjectFactory {
      * Create an instance of {@link JAXBElement }{@code <}{@link String }{@code >}}
      * 
      */
-    @XmlElementDecl(namespace = "", name = "LookupID")
-    public JAXBElement<String> createLookupID(String value) {
-        return new JAXBElement<String>(_LookupID_QNAME, String.class, null, value);
-    }
-
-    /**
-     * Create an instance of {@link JAXBElement }{@code <}{@link String }{@code >}}
-     * 
-     */
     @XmlElementDecl(namespace = "", name = "Alias")
     public JAXBElement<String> createAlias(String value) {
         return new JAXBElement<String>(_Alias_QNAME, String.class, null, value);
-    }
-
-    /**
-     * Create an instance of {@link JAXBElement }{@code <}{@link String }{@code >}}
-     * 
-     */
-    @XmlElementDecl(namespace = "", name = "PlanID")
-    public JAXBElement<String> createPlanID(String value) {
-        return new JAXBElement<String>(_PlanID_QNAME, String.class, null, value);
     }
 
     /**

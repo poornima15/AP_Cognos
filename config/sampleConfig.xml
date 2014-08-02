@@ -17,50 +17,50 @@
     <Views>
         <AttributeViews>
             <View columns="Name">
-                <AttributeDimensions>A_SC_CP</AttributeDimensions>
+                <Name>A_SC_CP</Name>
                 <Alias>STYLECOLOR_CHANNEL_PHASE</Alias>
             </View>
             <View columns="Name" ignore="false">
-                <AttributeDimensions>A_SC_CHNL_RGN</AttributeDimensions>
+                <Name>A_SC_CHNL_RGN</Name>
                 <Alias>STYLECOLOR_CHANNEL_REGION</Alias>
             </View>
             <View columns="Name" ignore="true">
-                <AttributeDimensions>A_SC_SUPPLIER</AttributeDimensions>
+                <Name>A_SC_SUPPLIER</Name>
                 <Alias>STYLECOLOR_SUPPLIER</Alias>
             </View>
         </AttributeViews>
         <HierarchyViews>
             <View columns="Name" ignore="true">
-                <AttributeDimensions>LOC_CHANNEL</AttributeDimensions>
+                <Name>LOC_CHANNEL</Name>
                 <Alias>LOCATION_CHANNEL</Alias>
             </View>
             <View columns="Name">
-                <AttributeDimensions>LOC_CHL_STR</AttributeDimensions>
+                <Name>LOC_CHL_STR</Name>
                 <Alias>LOCATION_CHANNEL_STORE</Alias>
             </View>
 
         </HierarchyViews>
         <PlanViews>
             <View columns="Id">
-                <PlanID>P_OPT_INT</PlanID>
+                <Name>P_OPT_INT</Name>
                 <Alias>INTAKE_HIERARCHY</Alias>
             </View>
             <View columns="Id">
-                <PlanID>P_OPT_INT</PlanID>
+                <Name>P_OPT_INT</Name>
                 <Alias>INTAKE_HIERARCHY</Alias>
             </View>
             <View columns="Id">
-                <PlanID>P_OPT_INT</PlanID>
+                <Name>P_OPT_INT</Name>
                 <Alias>INTAKE_HIERARCHY</Alias>
             </View>
         </PlanViews>
         <LookupViews>
             <View columns="Id">
-                <LookupID>Country_Lkp</LookupID>
+                <Name>Country_Lkp</Name>
                 <Alias>Countries</Alias>
             </View>
             <View columns="Id">
-                <PlanID>VAT_Lkp</PlanID>
+                <Name>VAT_Lkp</Name>
                 <Alias>VAT Tables</Alias>
             </View>
 
