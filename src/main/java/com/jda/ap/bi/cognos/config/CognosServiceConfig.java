@@ -4,9 +4,9 @@ package com.jda.ap.bi.cognos.config;
 import com.jda.ap.bi.bind.APBIConfig;
 import com.jda.ap.bi.bind.View;
 import com.jda.ap.bi.bind.Views;
-import com.jda.ap.bi.cognos.exception.BIConfigException;
 import com.jda.ap.bi.config.ConfigUtil;
 import com.jda.ap.bi.exception.ViewNotFoundException;
+import com.jda.ap.exception.BIConfigException;
 import com.jda.ap.reporting.enums.ViewTypeEnum;
 
 import javax.xml.bind.JAXBContext;
@@ -16,6 +16,8 @@ import java.io.File;
 import java.io.FilenameFilter;
 import java.util.*;
 import java.util.logging.Logger;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * User: Lee
@@ -78,7 +80,7 @@ public final class CognosServiceConfig implements IServiceConfig
      * Sets the config path from the params and loads any configuration files
      *
      * @param _configPath
-     * @throws com.jda.ap.bi.cognos.exception.BIConfigException
+     * @throws com.jda.ap.exception.BIConfigException
      */
     public void setConfigPath(String _configPath) throws BIConfigException
     {
@@ -105,7 +107,7 @@ public final class CognosServiceConfig implements IServiceConfig
      * Load any configuration files in the folder
      *
      * @param configFolder
-     * @throws com.jda.ap.bi.cognos.exception.BIConfigException
+     * @throws com.jda.ap/exception.BIConfigException
      */
     private void loadConfig(File configFolder) throws BIConfigException
     {
@@ -170,7 +172,7 @@ public final class CognosServiceConfig implements IServiceConfig
     /**
      * Load the config file from the config folder
      *
-     * @throws com.jda.ap.bi.cognos.exception.BIConfigException
+     * @throws com.jda.ap.exception.BIConfigException
      */
     public void loadFromConfigFolder(File configFolder) throws BIConfigException
     {
@@ -255,28 +257,44 @@ public final class CognosServiceConfig implements IServiceConfig
         Iterator<Map.Entry<String, List<String>>> formParamIter = formParams.iterator();
         ConfigUtil configUtil = ConfigUtil.getInstance(this);
 
+        // view names should end in _RVA, _RVH etc...
+        Pattern pattern = Pattern.compile("^(\\w+)_RV[AHLP]$");
+
 
         while (formParamIter.hasNext())
         {
+
             Map.Entry<String, List<String>> entry = formParamIter.next();
             // handle alias requests
             if (entry.getKey().indexOf("alias__") != -1)
             {
-                String viewName = entry.getKey().replace("alias__", "");
+                String tableName = entry.getKey().replace("alias__", "");
                 // just get the first entry
                 String alias = entry.getValue().get(0);
+
+                String viewName = null;
+
+                Matcher matcher = pattern.matcher(tableName);
+                if ( matcher.matches()) {
+                    viewName = matcher.group(1);
+                }   else {
+                    throw new BIConfigException("View name appears to be invalid: " + tableName);
+                }
+
                 log.info("Processing: " + viewName);
+
                 // see if we have a view with this name
                 try
                 {
-                    View view = configUtil.getAttributeView(viewName);
+                    View view = configUtil.getView(type, viewName);
                     view.setAlias(alias);
+                    view.setTable(tableName);
                 }
                 catch (ViewNotFoundException e)
                 {
                     // this just means the config doesnt include this element
                     // so we'll add it
-                    configUtil.addView(type, viewName, alias);
+                    configUtil.addView(type, viewName,tableName, alias);
                 }
             }
 

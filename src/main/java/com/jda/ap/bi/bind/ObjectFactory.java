@@ -25,11 +25,14 @@ import javax.xml.namespace.QName;
 public class ObjectFactory {
 
     private final static QName _Name_QNAME = new QName("", "Name");
+    private final static QName _Port_QNAME = new QName("", "port");
     private final static QName _ServiceURL_QNAME = new QName("", "ServiceURL");
     private final static QName _Username_QNAME = new QName("", "username");
     private final static QName _Alias_QNAME = new QName("", "Alias");
     private final static QName _ModelFile_QNAME = new QName("", "modelFile");
     private final static QName _ModelFolder_QNAME = new QName("", "modelFolder");
+    private final static QName _Table_QNAME = new QName("", "Table");
+    private final static QName _Debug_QNAME = new QName("", "debug");
     private final static QName _URL_QNAME = new QName("", "URL");
     private final static QName _Password_QNAME = new QName("", "password");
     private final static QName _Namespace_QNAME = new QName("", "namespace");
@@ -47,6 +50,14 @@ public class ObjectFactory {
      */
     public APBIConfig createAPBIConfig() {
         return new APBIConfig();
+    }
+
+    /**
+     * Create an instance of {@link General }
+     * 
+     */
+    public General createGeneral() {
+        return new General();
     }
 
     /**
@@ -131,6 +142,15 @@ public class ObjectFactory {
     }
 
     /**
+     * Create an instance of {@link JAXBElement }{@code <}{@link Short }{@code >}}
+     * 
+     */
+    @XmlElementDecl(namespace = "", name = "port")
+    public JAXBElement<Short> createPort(Short value) {
+        return new JAXBElement<Short>(_Port_QNAME, Short.class, null, value);
+    }
+
+    /**
      * Create an instance of {@link JAXBElement }{@code <}{@link String }{@code >}}
      * 
      */
@@ -173,6 +193,24 @@ public class ObjectFactory {
     @XmlElementDecl(namespace = "", name = "modelFolder")
     public JAXBElement<String> createModelFolder(String value) {
         return new JAXBElement<String>(_ModelFolder_QNAME, String.class, null, value);
+    }
+
+    /**
+     * Create an instance of {@link JAXBElement }{@code <}{@link String }{@code >}}
+     * 
+     */
+    @XmlElementDecl(namespace = "", name = "Table")
+    public JAXBElement<String> createTable(String value) {
+        return new JAXBElement<String>(_Table_QNAME, String.class, null, value);
+    }
+
+    /**
+     * Create an instance of {@link JAXBElement }{@code <}{@link String }{@code >}}
+     * 
+     */
+    @XmlElementDecl(namespace = "", name = "debug")
+    public JAXBElement<String> createDebug(String value) {
+        return new JAXBElement<String>(_Debug_QNAME, String.class, null, value);
     }
 
     /**

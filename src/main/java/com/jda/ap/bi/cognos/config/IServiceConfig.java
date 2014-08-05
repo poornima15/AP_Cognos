@@ -2,7 +2,7 @@ package com.jda.ap.bi.cognos.config;
 
 import com.jda.ap.bi.bind.APBIConfig;
 import com.jda.ap.bi.bind.View;
-import com.jda.ap.bi.cognos.exception.BIConfigException;
+import com.jda.ap.exception.BIConfigException;
 import com.jda.ap.reporting.enums.ViewTypeEnum;
 
 import java.io.File;

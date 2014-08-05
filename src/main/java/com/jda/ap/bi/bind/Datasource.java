@@ -35,14 +35,14 @@ import javax.xml.bind.annotation.XmlType;
     "username"
 })
 @XmlRootElement(name = "Datasource")
-@Generated(value = "com.sun.tools.internal.xjc.Driver", date = "2014-07-31T10:48:19-06:00", comments = "JAXB RI v2.2.4-2")
+@Generated(value = "com.sun.tools.internal.xjc.Driver", date = "2014-08-04T04:29:47-06:00", comments = "JAXB RI v2.2.4-2")
 public class Datasource {
 
     @XmlElement(name = "URL", required = true)
-    @Generated(value = "com.sun.tools.internal.xjc.Driver", date = "2014-07-31T10:48:19-06:00", comments = "JAXB RI v2.2.4-2")
+    @Generated(value = "com.sun.tools.internal.xjc.Driver", date = "2014-08-04T04:29:47-06:00", comments = "JAXB RI v2.2.4-2")
     protected String url;
     @XmlElement(required = true)
-    @Generated(value = "com.sun.tools.internal.xjc.Driver", date = "2014-07-31T10:48:19-06:00", comments = "JAXB RI v2.2.4-2")
+    @Generated(value = "com.sun.tools.internal.xjc.Driver", date = "2014-08-04T04:29:47-06:00", comments = "JAXB RI v2.2.4-2")
     protected String username;
 
     /**
@@ -53,7 +53,7 @@ public class Datasource {
      *     {@link String }
      *     
      */
-    @Generated(value = "com.sun.tools.internal.xjc.Driver", date = "2014-07-31T10:48:19-06:00", comments = "JAXB RI v2.2.4-2")
+    @Generated(value = "com.sun.tools.internal.xjc.Driver", date = "2014-08-04T04:29:47-06:00", comments = "JAXB RI v2.2.4-2")
     public String getURL() {
         return url;
     }
@@ -66,7 +66,7 @@ public class Datasource {
      *     {@link String }
      *     
      */
-    @Generated(value = "com.sun.tools.internal.xjc.Driver", date = "2014-07-31T10:48:19-06:00", comments = "JAXB RI v2.2.4-2")
+    @Generated(value = "com.sun.tools.internal.xjc.Driver", date = "2014-08-04T04:29:47-06:00", comments = "JAXB RI v2.2.4-2")
     public void setURL(String value) {
         this.url = value;
     }
@@ -79,7 +79,7 @@ public class Datasource {
      *     {@link String }
      *     
      */
-    @Generated(value = "com.sun.tools.internal.xjc.Driver", date = "2014-07-31T10:48:19-06:00", comments = "JAXB RI v2.2.4-2")
+    @Generated(value = "com.sun.tools.internal.xjc.Driver", date = "2014-08-04T04:29:47-06:00", comments = "JAXB RI v2.2.4-2")
     public String getUsername() {
         return username;
     }
@@ -92,7 +92,7 @@ public class Datasource {
      *     {@link String }
      *     
      */
-    @Generated(value = "com.sun.tools.internal.xjc.Driver", date = "2014-07-31T10:48:19-06:00", comments = "JAXB RI v2.2.4-2")
+    @Generated(value = "com.sun.tools.internal.xjc.Driver", date = "2014-08-04T04:29:47-06:00", comments = "JAXB RI v2.2.4-2")
     public void setUsername(String value) {
         this.username = value;
     }

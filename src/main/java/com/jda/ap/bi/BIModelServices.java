@@ -3,9 +3,9 @@ package com.jda.ap.bi;
 import com.jda.ap.bi.bind.APBIConfig;
 import com.jda.ap.bi.cognos.config.CognosServiceConfig;
 import com.jda.ap.bi.cognos.config.IServiceConfig;
-import com.jda.ap.bi.cognos.exception.BIConfigException;
 import com.jda.ap.bi.cognos.exception.FrameworkManagerException;
 import com.jda.ap.bi.modeller.Modeller;
+import com.jda.ap.exception.BIConfigException;
 
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;

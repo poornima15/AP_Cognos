@@ -39,20 +39,20 @@ import javax.xml.bind.annotation.XmlType;
     "lookupViews"
 })
 @XmlRootElement(name = "Views")
-@Generated(value = "com.sun.tools.internal.xjc.Driver", date = "2014-07-31T10:48:19-06:00", comments = "JAXB RI v2.2.4-2")
+@Generated(value = "com.sun.tools.internal.xjc.Driver", date = "2014-08-04T04:29:47-06:00", comments = "JAXB RI v2.2.4-2")
 public class Views {
 
     @XmlElement(name = "AttributeViews", required = true)
-    @Generated(value = "com.sun.tools.internal.xjc.Driver", date = "2014-07-31T10:48:19-06:00", comments = "JAXB RI v2.2.4-2")
+    @Generated(value = "com.sun.tools.internal.xjc.Driver", date = "2014-08-04T04:29:47-06:00", comments = "JAXB RI v2.2.4-2")
     protected AttributeViews attributeViews;
     @XmlElement(name = "HierarchyViews", required = true)
-    @Generated(value = "com.sun.tools.internal.xjc.Driver", date = "2014-07-31T10:48:19-06:00", comments = "JAXB RI v2.2.4-2")
+    @Generated(value = "com.sun.tools.internal.xjc.Driver", date = "2014-08-04T04:29:47-06:00", comments = "JAXB RI v2.2.4-2")
     protected HierarchyViews hierarchyViews;
     @XmlElement(name = "PlanViews", required = true)
-    @Generated(value = "com.sun.tools.internal.xjc.Driver", date = "2014-07-31T10:48:19-06:00", comments = "JAXB RI v2.2.4-2")
+    @Generated(value = "com.sun.tools.internal.xjc.Driver", date = "2014-08-04T04:29:47-06:00", comments = "JAXB RI v2.2.4-2")
     protected PlanViews planViews;
     @XmlElement(name = "LookupViews", required = true)
-    @Generated(value = "com.sun.tools.internal.xjc.Driver", date = "2014-07-31T10:48:19-06:00", comments = "JAXB RI v2.2.4-2")
+    @Generated(value = "com.sun.tools.internal.xjc.Driver", date = "2014-08-04T04:29:47-06:00", comments = "JAXB RI v2.2.4-2")
     protected LookupViews lookupViews;
 
     /**
@@ -63,7 +63,7 @@ public class Views {
      *     {@link AttributeViews }
      *     
      */
-    @Generated(value = "com.sun.tools.internal.xjc.Driver", date = "2014-07-31T10:48:19-06:00", comments = "JAXB RI v2.2.4-2")
+    @Generated(value = "com.sun.tools.internal.xjc.Driver", date = "2014-08-04T04:29:47-06:00", comments = "JAXB RI v2.2.4-2")
     public AttributeViews getAttributeViews() {
         return attributeViews;
     }
@@ -76,7 +76,7 @@ public class Views {
      *     {@link AttributeViews }
      *     
      */
-    @Generated(value = "com.sun.tools.internal.xjc.Driver", date = "2014-07-31T10:48:19-06:00", comments = "JAXB RI v2.2.4-2")
+    @Generated(value = "com.sun.tools.internal.xjc.Driver", date = "2014-08-04T04:29:47-06:00", comments = "JAXB RI v2.2.4-2")
     public void setAttributeViews(AttributeViews value) {
         this.attributeViews = value;
     }
@@ -89,7 +89,7 @@ public class Views {
      *     {@link HierarchyViews }
      *     
      */
-    @Generated(value = "com.sun.tools.internal.xjc.Driver", date = "2014-07-31T10:48:19-06:00", comments = "JAXB RI v2.2.4-2")
+    @Generated(value = "com.sun.tools.internal.xjc.Driver", date = "2014-08-04T04:29:47-06:00", comments = "JAXB RI v2.2.4-2")
     public HierarchyViews getHierarchyViews() {
         return hierarchyViews;
     }
@@ -102,7 +102,7 @@ public class Views {
      *     {@link HierarchyViews }
      *     
      */
-    @Generated(value = "com.sun.tools.internal.xjc.Driver", date = "2014-07-31T10:48:19-06:00", comments = "JAXB RI v2.2.4-2")
+    @Generated(value = "com.sun.tools.internal.xjc.Driver", date = "2014-08-04T04:29:47-06:00", comments = "JAXB RI v2.2.4-2")
     public void setHierarchyViews(HierarchyViews value) {
         this.hierarchyViews = value;
     }
@@ -115,7 +115,7 @@ public class Views {
      *     {@link PlanViews }
      *     
      */
-    @Generated(value = "com.sun.tools.internal.xjc.Driver", date = "2014-07-31T10:48:19-06:00", comments = "JAXB RI v2.2.4-2")
+    @Generated(value = "com.sun.tools.internal.xjc.Driver", date = "2014-08-04T04:29:47-06:00", comments = "JAXB RI v2.2.4-2")
     public PlanViews getPlanViews() {
         return planViews;
     }
@@ -128,7 +128,7 @@ public class Views {
      *     {@link PlanViews }
      *     
      */
-    @Generated(value = "com.sun.tools.internal.xjc.Driver", date = "2014-07-31T10:48:19-06:00", comments = "JAXB RI v2.2.4-2")
+    @Generated(value = "com.sun.tools.internal.xjc.Driver", date = "2014-08-04T04:29:47-06:00", comments = "JAXB RI v2.2.4-2")
     public void setPlanViews(PlanViews value) {
         this.planViews = value;
     }
@@ -141,7 +141,7 @@ public class Views {
      *     {@link LookupViews }
      *     
      */
-    @Generated(value = "com.sun.tools.internal.xjc.Driver", date = "2014-07-31T10:48:19-06:00", comments = "JAXB RI v2.2.4-2")
+    @Generated(value = "com.sun.tools.internal.xjc.Driver", date = "2014-08-04T04:29:47-06:00", comments = "JAXB RI v2.2.4-2")
     public LookupViews getLookupViews() {
         return lookupViews;
     }
@@ -154,7 +154,7 @@ public class Views {
      *     {@link LookupViews }
      *     
      */
-    @Generated(value = "com.sun.tools.internal.xjc.Driver", date = "2014-07-31T10:48:19-06:00", comments = "JAXB RI v2.2.4-2")
+    @Generated(value = "com.sun.tools.internal.xjc.Driver", date = "2014-08-04T04:29:47-06:00", comments = "JAXB RI v2.2.4-2")
     public void setLookupViews(LookupViews value) {
         this.lookupViews = value;
     }

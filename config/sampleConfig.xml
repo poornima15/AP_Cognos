@@ -1,5 +1,9 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <APBIConfig>
+    <General>
+        <port>8081</port>
+        <debug/>
+    </General>
     <Datasource>
         <URL>jdbc:oracle:thin:@localhost:1521:xe</URL>
         <username>assort</username>

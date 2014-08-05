@@ -45,7 +45,8 @@ public class ConfigUtil
     public String getHierarchyAlias(String name)
     {
         log.finer("Getting hierarchy alias for: " + name);
-        if ( _config.getServiceConfig().getViews().getHierarchyViews() == null ) {
+        if (_config.getServiceConfig().getViews().getHierarchyViews() == null)
+        {
             log.finer("No hierarchy views found");
             return null;
         }
@@ -70,6 +71,14 @@ public class ConfigUtil
     }
 
 
+    /**
+     * Get a view by type and name
+     *
+     * @param type
+     * @param name
+     * @return
+     * @throws ViewNotFoundException
+     */
     public View getView(ViewTypeEnum type, String name) throws ViewNotFoundException
     {
         switch (type)
@@ -105,7 +114,8 @@ public class ConfigUtil
     public String getAttributeAlias(String name)
     {
         log.info("Getting attribute alias for: " + name);
-        if ( _config.getServiceConfig().getViews().getAttributeViews() == null ) {
+        if (_config.getServiceConfig().getViews().getAttributeViews() == null)
+        {
             log.info("No attribute views found");
             return null;
         }
@@ -114,7 +124,7 @@ public class ConfigUtil
 
             if (view.getName().equalsIgnoreCase(name))
             {
-                log.finer("Alias: " + view.getAlias());
+                log.info("Alias: " + view.getAlias());
                 return view.getAlias();
             }
         }
@@ -133,7 +143,8 @@ public class ConfigUtil
     {
         log.info("Getting plan alias for: " + name);
 
-        if ( _config.getServiceConfig().getViews().getPlanViews() == null ) {
+        if (_config.getServiceConfig().getViews().getPlanViews() == null)
+        {
             return null;
         }
         for (View view : _config.getServiceConfig().getViews().getPlanViews().getView())
@@ -154,10 +165,12 @@ public class ConfigUtil
      * @param viewName
      * @return
      * @throws ViewNotFoundException
+     * @see com.jda.ap.bi.bind.View getView(ViewTypeEnum type, String name)
      */
     public View getAttributeView(String viewName) throws ViewNotFoundException
     {
-        if ( _config.getServiceConfig().getViews().getAttributeViews() == null ) {
+        if (_config.getServiceConfig().getViews().getAttributeViews() == null)
+        {
             throw new ViewNotFoundException(viewName);
 
         }
@@ -175,7 +188,6 @@ public class ConfigUtil
 
 
     /**
-     *
      * Get lookup view
      *
      * @param viewName
@@ -184,7 +196,8 @@ public class ConfigUtil
      */
     public View getLookupView(String viewName) throws ViewNotFoundException
     {
-        if ( _config.getServiceConfig().getViews().getLookupViews() == null ) {
+        if (_config.getServiceConfig().getViews().getLookupViews() == null)
+        {
             throw new ViewNotFoundException(viewName);
 
         }
@@ -210,7 +223,8 @@ public class ConfigUtil
      */
     public View getPlanView(String viewName) throws ViewNotFoundException
     {
-        if ( _config.getServiceConfig().getViews().getPlanViews() == null ) {
+        if (_config.getServiceConfig().getViews().getPlanViews() == null)
+        {
             throw new ViewNotFoundException(viewName);
 
         }
@@ -234,7 +248,8 @@ public class ConfigUtil
      */
     public View getHierarchyView(String viewName) throws ViewNotFoundException
     {
-        if ( _config.getServiceConfig().getViews().getHierarchyViews() == null ) {
+        if (_config.getServiceConfig().getViews().getHierarchyViews() == null)
+        {
             throw new ViewNotFoundException(viewName);
 
         }
@@ -255,77 +270,50 @@ public class ConfigUtil
      * @param type
      * @param viewName
      */
-    public void addView(ViewTypeEnum type, String viewName, String alias)
+    public void addView(ViewTypeEnum type, String viewName, String tableName, String alias)
     {
+        View newView = new View();
+        newView.setColumns("Name");
+        if (alias != null)
+        {
+            newView.setAlias(alias);
+        }
+        else
+        {
+            newView.setAlias(viewName);
+        }
+        newView.setIgnore("false");
+        newView.setName(viewName);
+        newView.setTable(tableName);
+
         switch (type)
         {
             case ATTRIBUTE:
             {
-                View newView = new View();
-                newView.setColumns("Name");
-                if (alias != null)
-                {
-                    newView.setAlias(alias);
-                }
-                else
-                {
-                    newView.setAlias(viewName);
-                }
-                newView.setIgnore("false");
-                newView.setName(viewName);
+
                 _config.getServiceConfig().getViews().getAttributeViews().getView().add(newView);
                 break;
             }
             case HIERARCHY:
             {
-                View newView = new View();
-                newView.setColumns("Name");
-                if (alias != null)
-                {
-                    newView.setAlias(alias);
-                }
-                else
-                {
-                    newView.setAlias(viewName);
-                }
-                newView.setIgnore("false");
-                newView.setName(viewName);
+
+
                 _config.getServiceConfig().getViews().getHierarchyViews().getView().add(newView);
 
                 break;
             }
             case PLAN:
             {
-                View newView = new View();
-                newView.setColumns("Name");
-                if (alias != null)
-                {
-                    newView.setAlias(alias);
-                }
-                else
-                {
-                    newView.setAlias(viewName);
-                }
-                newView.setIgnore("false");
-                newView.setName(viewName);
+
+
                 _config.getServiceConfig().getViews().getPlanViews().getView().add(newView);
 
                 break;
             }
             case LOOKUP:
             {
-                View newView = new View();
-                newView.setColumns("Name");
-                if (alias != null)
-                {
-                    newView.setAlias(alias);
-                }
-                else
-                {
-                    newView.setAlias(viewName);
-                }
-                newView.setIgnore("false");
-                newView.setName(viewName);
+
+
                 _config.getServiceConfig().getViews().getLookupViews().getView().add(newView);
 
                 break;

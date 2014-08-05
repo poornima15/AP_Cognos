@@ -22,11 +22,11 @@ import com.cognos.developer.schemas.bmt._60._7.Project;
 import com.jda.ap.bi.BIModelServices;
 import com.jda.ap.bi.cognos.config.CognosServiceConfig;
 import com.jda.ap.bi.cognos.config.IServiceConfig;
-import com.jda.ap.bi.cognos.exception.BIConfigException;
 import com.jda.ap.bi.cognos.exception.FrameworkManagerException;
 import com.jda.ap.bi.enums.ModelCommandEnum;
 import com.jda.ap.bi.enums.ScriptPlaceholderEnum;
 import com.jda.ap.bi.modeller.Modeller;
+import com.jda.ap.exception.BIConfigException;
 import com.sun.xml.internal.bind.marshaller.CharacterEscapeHandler;
 import com.sun.xml.internal.bind.marshaller.DataWriter;
 import org.apache.axis.AxisFault;
@@ -857,6 +857,9 @@ public class APFrameworkManagerImpl extends BIModelServices
 
             marshaller.marshal(project, dataWriter);
             fw.close();
+            // open model
+            openProject(modelFile.getAbsolutePath());
+
             log.info("Saving project...");
             saveProject(modelFile.getAbsolutePath());
             log.info("Done");
@@ -867,6 +870,15 @@ public class APFrameworkManagerImpl extends BIModelServices
            throw new FrameworkManagerException(e.getMessage(),e);
         }  finally {
             logoffFromCognos();
+            // close project
+            try
+            {
+                closeProject(modelFile.getAbsolutePath());
+            }
+            catch (Exception e)
+            {
+              log.warning("Failed to close model: " + e.getMessage());
+            }
         }
     }
 }

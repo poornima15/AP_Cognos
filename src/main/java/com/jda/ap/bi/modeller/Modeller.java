@@ -5,6 +5,7 @@ import com.cognos.developer.schemas.bmt._60._7.*;
 import com.jda.ap.bi.cognos.config.IServiceConfig;
 import com.jda.ap.bi.config.ConfigUtil;
 import com.jda.ap.exception.APServiceException;
+import com.jda.ap.exception.BIConfigException;
 import com.jda.ap.reporting.APReportToolkit;
 import com.jda.ap.reporting.enums.ViewTypeEnum;
 import com.jda.ap.reporting.interfaces.IReportToolkit;
@@ -81,7 +82,7 @@ public class Modeller
 
 
         log.info("Using config: " + _config);
-
+        Project reportProject = null;
         gregorianCalendar = new XMLGregorianCalendarImpl((GregorianCalendar) GregorianCalendar.getInstance());
 
         if (modelFile == null || !modelFile.exists())
@@ -89,11 +90,12 @@ public class Modeller
             log.info("Building new model from scratch...");
         }
 
-
+        try
+        {
 
             // create a model
             ObjectFactory objectFactory = new ObjectFactory();
-            Project reportProject = objectFactory.createProject();
+            reportProject = objectFactory.createProject();
             reportProject.setQueryMode("dynamic");
             reportProject.setName(PACKAGE_NAME);
             // set supported locales
@@ -127,7 +129,7 @@ public class Modeller
             addLookupNamespace(objectFactory, mainNamespace);
 
             // build the relationships
-            addRelationships(objectFactory, mainNamespace);
+            addRelationships(mainNamespace);
 
             // add the scope relationships
             addScopeRelationships(mainNamespace);
@@ -206,7 +208,11 @@ public class Modeller
             packages.getPackage().add(packageViewType);
 
             reportProject.setDefaultLocale("en");
-
+        }
+        catch (Exception ex)
+        {
+            throw new APServiceException(ex.getMessage(), ex);
+        }
 
 
         return reportProject;
@@ -214,9 +220,10 @@ public class Modeller
 
     /**
      * Create relationship scope information
+     *
      * @param mainNamespace
      */
-    private void addScopeRelationships(Namespace mainNamespace) throws APServiceException
+    private void addScopeRelationships(Namespace mainNamespace) throws APServiceException, BIConfigException
     {
         log.info("Adding scope relationships...");
 
@@ -225,24 +232,27 @@ public class Modeller
 
         final Map<String, BIView> baseHierarchies = toolkit.getBaseHierarchies();
 
-        for ( BIView planView : toolkit.getAllViews(ViewTypeEnum.PLAN)) {
+        for (BIView planView : toolkit.getAllViews(ViewTypeEnum.PLAN))
+        {
 
             // skip if view doesn't exist
-            if (! planView.isExists()) {
-                 continue;
+            if (!planView.isExists())
+            {
+                continue;
             }
 
             log.info("Creating scope relationships for plan: " + planView.getSourceTable());
 
             // get the ID columns for the
-            for ( String planIDColumn : toolkit.getTableColumns(planView.getSourceTable(),ID_COLUMNS_ONLY)) {
-                 log.info("Looking for dimensions with : " + planIDColumn);
-                 //@todo try and find a match in the base hierarchies (PRODUCT/LOCATION/TIME) first and then decide if to continue
-                 Collection<BIView> possibleViews = toolkit.getHierarchyViewsForColumn(planIDColumn, false);
-                 log.info("GOT VIEWS: " + possibleViews);
+            for (String planIDColumn : toolkit.getTableColumns(planView.getSourceTable(), ID_COLUMNS_ONLY))
+            {
+                log.info("Looking for dimensions with : " + planIDColumn);
+                //@todo try and find a match in the base hierarchies (PRODUCT/LOCATION/TIME) first and then decide if to continue
+                Collection<BIView> possibleViews = toolkit.getHierarchyViewsForColumn(planIDColumn, false);
+                log.info("GOT VIEWS: " + possibleViews);
 
-                 // add the relationship
-                 addScopeRelationShip(planView, possibleViews, mainNamespace);
+                // add the relationship
+                addScopeRelationShip(planView, possibleViews, mainNamespace);
             }
 
         }
@@ -253,130 +263,148 @@ public class Modeller
     /**
      * Create a scope relationship between a plan column (measure) and one or more dimensions (hierarchies)
      *
-     *
-     *
      * @param measureView
      * @param possibleViews
      * @param mainNamespace
      */
     private void addScopeRelationShip(BIView measureView, Collection<BIView> possibleViews, Namespace mainNamespace)
     {
-          for ( BIView view : possibleViews) {
-              ScopeRelationshipType scopeRelationship = _objectFactory.createScopeRelationshipType();
-              ScopeRelationshipType.Scope scope = _objectFactory.createScopeRelationshipTypeScope();
+        for (BIView view : possibleViews)
+        {
+            ScopeRelationshipType scopeRelationship = _objectFactory.createScopeRelationshipType();
+            ScopeRelationshipType.Scope scope = _objectFactory.createScopeRelationshipTypeScope();
 
-              StringBuilder relationshipName = new StringBuilder();
-              // set the name of the relationship
-              relationshipName.append(view.getSourceTable()).append(" &lt;-&gt; ").append(measureView.getAlias());
-              scopeRelationship.setName(relationshipName.toString());
-              // set the left side of the relationship (the hierarchy side)
-              CardinalityType leftCardinality= _objectFactory.createCardinalityType();
-              leftCardinality.setMincard(CardinalityEnum.ONE);
-              leftCardinality.setMaxcard(CardinalityEnum.ONE);
-              leftCardinality.setRefobj("[Dimensions].[" + view.getAlias() + " Hierarchy]");
-              scopeRelationship.setLeft(leftCardinality);
+            StringBuilder relationshipName = new StringBuilder();
+            // set the name of the relationship
+            relationshipName.append(view.getAlias()).append(" &lt;=&gt; ").append(measureView.getAlias());
+            scopeRelationship.setName(relationshipName.toString());
+            // set the left side of the relationship (the hierarchy side)
+            CardinalityType leftCardinality = _objectFactory.createCardinalityType();
+            leftCardinality.setMincard(CardinalityEnum.ONE);
+            leftCardinality.setMaxcard(CardinalityEnum.ONE);
+            leftCardinality.setRefobj("[Dimensions].[" + view.getAlias() + " Hierarchy]");
+            scopeRelationship.setLeft(leftCardinality);
 
-              // set the right side of the relationship (the measure/plan side)
-              CardinalityType rightCardinality = _objectFactory.createCardinalityType();
-              rightCardinality.setMincard(CardinalityEnum.ONE);
-              rightCardinality.setMaxcard(CardinalityEnum.MANY);
-              rightCardinality.setRefobj("[Measures].[" + measureView.getAlias() + "]");
-              scopeRelationship.setRight(rightCardinality);
+            // set the right side of the relationship (the measure/plan side)
+            CardinalityType rightCardinality = _objectFactory.createCardinalityType();
+            rightCardinality.setMincard(CardinalityEnum.ONE);
+            rightCardinality.setMaxcard(CardinalityEnum.MANY);
+            rightCardinality.setRefobj("[Measures].[" + measureView.getAlias() + "]");
+            scopeRelationship.setRight(rightCardinality);
 
-              // add the relationship to the main namespace
-              mainNamespace.getFolderOrFunctionOrNamespace().add(scopeRelationship);
+            // add the relationship to the main namespace
+            mainNamespace.getFolderOrFunctionOrNamespace().add(scopeRelationship);
 
-          }
+        }
     }
 
-    private void addRelationships(ObjectFactory objectFactory, Namespace mainNamespace)
+    /**
+     * Add relationship joins
+     *
+     * @param mainNamespace
+     */
+    private void addRelationships(Namespace mainNamespace) throws BIConfigException
     {
 
+
+        // add plan<->hierarchy relationships
+        addRelationshipJoins(ViewTypeEnum.PLAN, mainNamespace);
+
+        // add attribute<->hierarchy relationships
+        addRelationshipJoins(ViewTypeEnum.ATTRIBUTE, mainNamespace);
+
+        // add lookup<->hierarchy relationships
+        addRelationshipJoins(ViewTypeEnum.LOOKUP, mainNamespace);
+
+    }
+
+
+    private void addRelationshipJoins(ViewTypeEnum viewType, Namespace mainNamespace) throws BIConfigException
+    {
         // create relationships between plans and hierarchies
         // go through all plans
-        for ( BIView planView : toolkit.getAllViews(ViewTypeEnum.PLAN))
+        for (BIView view : toolkit.getAllViews(viewType))
         {
             // skip if view doesnt exist
-               if (! planView.isExists()) {
-                    continue;
-               }
-            log.info("Looking for relationships for : " + planView);
+            if (!view.isExists())
+            {
+                continue;
+            }
+            log.info("Looking for relationships for : " + view);
 
             // go through all columns in plan view with and ID
-            List<String> planIDColumns = toolkit.getTableColumns(planView.getSourceTable(), ID_COLUMNS_ONLY);
+            List<String> viewIDColumns = toolkit.getTableColumns(view.getSourceTable(), ID_COLUMNS_ONLY);
 
-            for (String planIDColumn : planIDColumns)
+            for (String viewIDColumn : viewIDColumns)
             {
-                log.info("Looking for joins with : " + planIDColumn);
+                log.info("Looking for joins with : " + viewIDColumn);
 
                 // go through all hierarchy tables and look for matching column
-                for (BIView hierachyView : toolkit.getAllViews(ViewTypeEnum.HIERARCHY))
+                for (BIView hierarchyView : toolkit.getAllViews(ViewTypeEnum.HIERARCHY))
                 {
                     // skip if view doesnt exist
-                    if (! hierachyView.isExists()) {
+                    if (!hierarchyView.isExists())
+                    {
                         continue;
                     }
 
                     // go through all hierarchy columns
-                    List<String> hierarchyIDColumns = toolkit.getTableColumns(hierachyView.getSourceTable(), ID_COLUMNS_ONLY);
+                    List<String> hierarchyIDColumns = toolkit.getTableColumns(hierarchyView.getSourceTable(), ID_COLUMNS_ONLY);
 
-                    for (String hierarchyIDColumn : hierarchyIDColumns) {
-                         if ( hierarchyIDColumn.equalsIgnoreCase(planIDColumn)) {
-                             StringBuilder stringBuilder = new StringBuilder();
+                    for (String hierarchyIDColumn : hierarchyIDColumns)
+                    {
+                        if (hierarchyIDColumn.equalsIgnoreCase(viewIDColumn))
+                        {
+                            StringBuilder stringBuilder = new StringBuilder();
 
-                             stringBuilder.append("*** Creating join between [").append(planView.getViewName()).append("] and [").append(hierachyView.getViewName()).append("]");
-                             stringBuilder.append(" on column [").append(hierarchyIDColumn).append("] ***");
-                             log.info(stringBuilder.toString());
-                             RelationshipType relationship = objectFactory.createRelationshipType();
-                             relationship.setStatus(StatusType.NEEDS_REEVALUATION);
-                             StringBuilder relationshipNameStr = new StringBuilder();
-                             relationshipNameStr.append(hierachyView.getSourceTable()).append("&lt;-&gt;").append(planView.getSourceTable());
-                             relationship.setName(relationshipNameStr.toString());
-                             // create expression
-                             ExpressionType relationshipExpression = objectFactory.createExpressionType();
-                             RefobjViaShortcut expressionRefObject = objectFactory.createRefobjViaShortcut();
+                            stringBuilder.append("*** Creating join between [").append(view.getViewName()).append("] and [").append(hierarchyView.getViewName()).append("]");
+                            stringBuilder.append(" on column [").append(hierarchyIDColumn).append("] ***");
+                            log.info(stringBuilder.toString());
+                            RelationshipType relationship = _objectFactory.createRelationshipType();
+                            relationship.setStatus(StatusType.VALID);
+                            StringBuilder relationshipNameStr = new StringBuilder();
+                            relationshipNameStr.append(hierarchyView.getSourceTable()).append("&lt;-&gt;").append(view.getSourceTable());
+                            relationship.setName(relationshipNameStr.toString());
+                            // create expression
+                            ExpressionType relationshipExpression = _objectFactory.createExpressionType();
+                            RefobjViaShortcut expressionRefObject = _objectFactory.createRefobjViaShortcut();
 
-                             JAXBElement leftSideExpression = objectFactory.createRefobjViaShortcutRefobj("[Hierarchies].[" + hierachyView.getAlias()+"].[" + hierarchyIDColumn +"_ID]");
-                             JAXBElement rightSideExpression = objectFactory.createRefobjViaShortcutRefobj("[Plans].[" + planView.getAlias()+"].[" + planIDColumn +"_ID]");
+                            JAXBElement leftSideExpression = _objectFactory.createRefobjViaShortcutRefobj("[" + ViewTypeEnum.HIERARCHY.getNamespace() + "].[" + hierarchyView.getAlias() + "].[" + hierarchyIDColumn + "_ID]");
+                            JAXBElement rightSideExpression = _objectFactory.createRefobjViaShortcutRefobj("[" + viewType.getNamespace() + "].[" + view.getAlias() + "].[" + viewIDColumn + "_ID]");
 
-                             expressionRefObject.getContent().add(leftSideExpression) ;
-                             expressionRefObject.getContent().add(rightSideExpression);
+                            expressionRefObject.getContent().add(leftSideExpression);
+                            expressionRefObject.getContent().add(rightSideExpression);
 
-                             relationshipExpression.setContent("<refobj>" + leftSideExpression.getValue() + "</refobj>=<refobj>" + rightSideExpression.getValue() + "</refobj>");
-
-
-                             relationship.setExpression(relationshipExpression);
-
-                             // set left side relationship - Hierarchy should have 1 and only 1 entry
-                             CardinalityType leftCardinalityType = objectFactory.createCardinalityType();
-                             leftCardinalityType.setRefobj("[Hierarchies].[" + hierachyView.getAlias()+"]");
-                             leftCardinalityType.setMaxcard(CardinalityEnum.ONE);
-                             leftCardinalityType.setMincard(CardinalityEnum.ONE);
-                             relationship.setLeft(leftCardinalityType);
+                            relationshipExpression.setContent("<refobj>" + leftSideExpression.getValue() + "</refobj>=<refobj>" + rightSideExpression.getValue() + "</refobj>");
 
 
-                             // set right side relationship - plan can have zero or more entries
-                             CardinalityType rightCardinalityType = objectFactory.createCardinalityType();
-                             rightCardinalityType.setRefobj("[Plans].[" + planView.getAlias()+"]");
-                             rightCardinalityType.setMaxcard(CardinalityEnum.MANY);
-                             rightCardinalityType.setMincard(CardinalityEnum.ZERO);
-                             relationship.setRight(rightCardinalityType);
+                            relationship.setExpression(relationshipExpression);
+
+                            // set left side relationship - Hierarchy should have 1 and only 1 entry
+                            CardinalityType leftCardinalityType = _objectFactory.createCardinalityType();
+                            leftCardinalityType.setRefobj("[" + ViewTypeEnum.HIERARCHY.getNamespace() + "].[" + hierarchyView.getAlias() + "]");
+                            leftCardinalityType.setMaxcard(CardinalityEnum.ONE);
+                            leftCardinalityType.setMincard(CardinalityEnum.ONE);
+                            relationship.setLeft(leftCardinalityType);
 
 
-                             mainNamespace.getFolderOrFunctionOrNamespace().add(relationship);
-                         }
+                            // set right side relationship - plan can have zero or more entries
+                            CardinalityType rightCardinalityType = _objectFactory.createCardinalityType();
+                            rightCardinalityType.setRefobj("[" + viewType.getNamespace() + "].[" + view.getAlias() + "]");
+                            rightCardinalityType.setMaxcard(CardinalityEnum.MANY);
+                            rightCardinalityType.setMincard(CardinalityEnum.ZERO);
+                            relationship.setRight(rightCardinalityType);
+
+
+                            mainNamespace.getFolderOrFunctionOrNamespace().add(relationship);
+                        }
                     }
 
 
                 }
 
             }
-
-
-
         }
-
-
     }
 
 
@@ -386,7 +414,7 @@ public class Modeller
      * @param objectFactory
      * @param mainNamespace
      */
-    private void addMeasuresNamespace(ObjectFactory objectFactory, Namespace mainNamespace)
+    private void addMeasuresNamespace(ObjectFactory objectFactory, Namespace mainNamespace) throws BIConfigException
     {
         Namespace measureNamespace = objectFactory.createNamespace();
         NameType lookupNameType = createNameType(objectFactory, "Measures");
@@ -395,10 +423,12 @@ public class Modeller
         measureNamespace.setLastChanged(gregorianCalendar.normalize());
 
         // for every plan table we'll add measures
-        for ( BIView planView : toolkit.getAllViews(ViewTypeEnum.PLAN)) {
+        for (BIView planView : toolkit.getAllViews(ViewTypeEnum.PLAN))
+        {
 
-            if (! planView.isExists()) {
-                 continue;
+            if (!planView.isExists())
+            {
+                continue;
             }
 
             Dimension measureDimension = objectFactory.createDimension();
@@ -410,12 +440,20 @@ public class Modeller
             measureDimension.setType("measure");
             // set rollup
             measureDimension.setMembersRollup(true);
+            // set empty definition
+            DefinitionType definitionType = _objectFactory.createDefinitionType();
+            DefinitionType.ModelQuery query = _objectFactory.createDefinitionTypeModelQuery();
+            query.setSql(_objectFactory.createSqlType());
+            definitionType.setModelQuery(query);
+            measureDimension.setDefinition(definitionType);
 
             // for each measure column add to the measure dimension
 
-            for ( String column : toolkit.getTableColumns(planView.getSourceTable(), ALL_COLUMNS )) {
+            for (String column : toolkit.getTableColumns(planView.getSourceTable(), ALL_COLUMNS))
+            {
                 // if the column is an ID column it'll end in _ID and we dont want it as a measure
-                if ( column.toUpperCase().endsWith("_ID") ) {
+                if (column.toUpperCase().endsWith("_ID"))
+                {
                     // skip it
                     continue;
                 }
@@ -430,7 +468,7 @@ public class Modeller
                 measure.setUsage("fact");
                 measure.setScale(new BigInteger("4"));
                 measure.setPrecision(new BigInteger("31"));
-                measure.setSize(16l);
+                measure.setSize(20l);
                 measure.setDatatype("decimal");
                 measure.setNullable(true);
                 measure.setFormat("&amp;lt;formatGroup&amp;gt;&amp;lt;currencyFormat xml:lang=&amp;quot;en-us&amp;quot; /&amp;gt;&amp;lt;/formatGroup&amp;gt;");
@@ -440,7 +478,7 @@ public class Modeller
                 // add plan expression
                 ExpressionType expressionType = objectFactory.createExpressionType();
 
-                StringBuilder expression = new StringBuilder().append("<refobj>[Plans].[").append(planView.getAlias()).append("].[").append(column).append("]</refobj>");
+                StringBuilder expression = new StringBuilder().append("<refobj>[").append(ViewTypeEnum.PLAN.getNamespace()).append("].[").append(planView.getAlias()).append("].[").append(column).append("]</refobj>");
 
                 expressionType.setContent(expression.toString());
                 measure.setExpression(expressionType);
@@ -462,14 +500,13 @@ public class Modeller
 
 
     /**
-     *
      * Add lookup information
      * These views are views of the MST_IB_LOOKUP_VAL entries
      *
      * @param objectFactory
      * @param mainNamespace
      */
-    private void addLookupNamespace(ObjectFactory objectFactory, Namespace mainNamespace)
+    private void addLookupNamespace(ObjectFactory objectFactory, Namespace mainNamespace) throws BIConfigException
     {
         Namespace lookupNamespace = objectFactory.createNamespace();
         NameType lookupNameType = createNameType(objectFactory, "Lookups");
@@ -480,8 +517,9 @@ public class Modeller
         for (BIView view : toolkit.getAllViews(ViewTypeEnum.LOOKUP))
         {
             // skip if does not exist in Db
-            if (! view.isExists()) {
-                 continue;
+            if (!view.isExists())
+            {
+                continue;
             }
 
             QuerySubject querySubject = objectFactory.createQuerySubject();
@@ -491,7 +529,7 @@ public class Modeller
             String attributeDisplayName = (view.getAlias() == null) ? view.getViewName() : view.getAlias();
 
             querySubject.getName().add(createNameType(objectFactory, attributeDisplayName));
-            querySubject.setStatus(StatusType.NEEDS_REEVALUATION);
+            querySubject.setStatus(StatusType.VALID);
             setChangeTimeAndOwner(querySubject);
             lookupNamespace.getFolderOrFunctionOrNamespace().add(querySubject);
 
@@ -521,7 +559,7 @@ public class Modeller
             // add all columns of the lookup table
             for (String attrColumnName : toolkit.getTableColumns(view.getSourceTable(), ALL_COLUMNS))
             {
-                querySubject.getQueryItemOrQueryItemFolder().add(createQueryItem(objectFactory,"Lookups", view, attrColumnName, null,false));
+                querySubject.getQueryItemOrQueryItemFolder().add(createQueryItem(objectFactory, "Lookups", view, attrColumnName, null, false));
             }
         }
 
@@ -554,7 +592,7 @@ public class Modeller
             for (String hierarchyName : baseHierarchies.keySet())
             {
                 log.info("Creating base hierarchy : " + baseHierarchies.get(hierarchyName));
-                  addHierarchy(objectFactory, baseHierarchyNamespace, baseHierarchies.get(hierarchyName), hierarchyName);
+                addHierarchy(objectFactory, baseHierarchyNamespace, baseHierarchies.get(hierarchyName), baseHierarchies.get(hierarchyName).getAlias());
             }
         }
         catch (APServiceException e)
@@ -573,7 +611,7 @@ public class Modeller
      * @param objectFactory
      * @param mainNamespace
      */
-    private void addDimensions(ObjectFactory objectFactory, Namespace mainNamespace)
+    private void addDimensions(ObjectFactory objectFactory, Namespace mainNamespace) throws BIConfigException
     {
         // add dimension namespace
         Namespace dimensionNamespace = objectFactory.createNamespace();
@@ -589,7 +627,7 @@ public class Modeller
         for (BIView hierarchyView : toolkit.getAllViews(ViewTypeEnum.HIERARCHY))
         {
             Dimension dimension = objectFactory.createDimension();
-            dimension.setStatus(StatusType.NEEDS_REEVALUATION);
+            dimension.setStatus(StatusType.VALID);
             dimension.getName().add(createNameType(objectFactory, hierarchyView.getAlias() + " Hierarchy"));
             dimension.setType("regular");
             dimension.setMembersRollup(true);
@@ -626,10 +664,20 @@ public class Modeller
                 setChangeTimeAndOwner(dimensionLevel);
                 dimensionLevel.setIsUnique(false);
                 // set the query items for the level (_id and _name)
-                dimensionLevel.getQueryItemOrQueryItemFolder().add(createQueryItem(objectFactory,"Hierarchies", hierarchyView, level + "_ID", createBusinessKeyRole(objectFactory), true));
-                dimensionLevel.getQueryItemOrQueryItemFolder().add(createQueryItem(objectFactory,"Hierarchies", hierarchyView, level + "_NAME", createMemberCaptionRole(objectFactory),true));
+                dimensionLevel.getQueryItemOrQueryItemFolder().add(createQueryItem(objectFactory, ViewTypeEnum.HIERARCHY.getNamespace(), hierarchyView, level + "_ID", createBusinessKeyRole(objectFactory), true));
+                dimensionLevel.getQueryItemOrQueryItemFolder().add(createQueryItem(objectFactory, ViewTypeEnum.HIERARCHY.getNamespace(), hierarchyView, level + "_NAME", createMemberCaptionRole(objectFactory), true));
 
+                OrderByType orderByType = _objectFactory.createOrderByType();
+                OrderByType.SortItem sortItem = _objectFactory.createOrderByTypeSortItem();
+                sortItem.setNullPlacement("nullslast");
+                sortItem.setSort("ascending");
+                StringBuilder sortRefString = new StringBuilder();
+                sortRefString.append("[Dimensions].[").append(hierarchyView.getAlias()).append(" Hierarchy].[");
+                sortRefString.append(hierarchyView.getAlias()).append("].[").append(level).append("].[").append(level).append("_NAME]");
+                sortItem.setRefobj(sortRefString.toString());
+                orderByType.getSortItem().add(sortItem);
 
+                dimensionLevel.setMemberSort(orderByType);
                 hierarchy.getLevel().add(dimensionLevel);
             }
 
@@ -647,19 +695,20 @@ public class Modeller
     }
 
 
-    private void addPlansNamespace(ObjectFactory objectFactory, Namespace mainNamespace)
+    private void addPlansNamespace(ObjectFactory objectFactory, Namespace mainNamespace) throws BIConfigException
     {
 
         // add plans namespace
         Namespace planNamespace = objectFactory.createNamespace();
-        NameType attributeNameType = createNameType(objectFactory, "Plans");
+        NameType attributeNameType = createNameType(objectFactory, ViewTypeEnum.PLAN.getNamespace());
         planNamespace.getName().add(attributeNameType);
         setChangeTimeAndOwner(planNamespace);
 
         planNamespace.setLastChanged(gregorianCalendar.normalize());
 
-        for ( BIView view : toolkit.getAllViews(ViewTypeEnum.PLAN)) {
-            if ( view.isExists())
+        for (BIView view : toolkit.getAllViews(ViewTypeEnum.PLAN))
+        {
+            if (view.isExists())
             {
                 addPlanEntry(objectFactory, planNamespace, view);
             }
@@ -681,7 +730,7 @@ public class Modeller
     {
         // add hierarchy namespace
         Namespace attributeNamespace = objectFactory.createNamespace();
-        NameType attributeNameType = createNameType(objectFactory, "Attributes");
+        NameType attributeNameType = createNameType(objectFactory, ViewTypeEnum.ATTRIBUTE.getNamespace());
         attributeNamespace.getName().add(attributeNameType);
         setChangeTimeAndOwner(attributeNamespace);
 
@@ -698,18 +747,17 @@ public class Modeller
             String attributeDisplayName = (alias == null) ? attrView : alias;
 
             querySubject.getName().add(createNameType(objectFactory, attributeDisplayName));
-            querySubject.setStatus(StatusType.NEEDS_REEVALUATION);
+            querySubject.setStatus(StatusType.VALID);
             setChangeTimeAndOwner(querySubject);
             attributeNamespace.getFolderOrFunctionOrNamespace().add(querySubject);
             querySubject.setDefinition(objectFactory.createDefinitionType());
             querySubject.getDefinition().setDbQuery(getQuery(objectFactory, attrView));
 
 
-
             // add all columns of the attribute table
             for (String attrColumnName : toolkit.getTableColumns(attrView, ALL_COLUMNS))
             {
-                querySubject.getQueryItemOrQueryItemFolder().add(createAttributeQueryItem(objectFactory,  attrColumnName, "attribute"));
+                querySubject.getQueryItemOrQueryItemFolder().add(createAttributeQueryItem(objectFactory, attrColumnName, "attribute"));
             }
         }
 
@@ -723,7 +771,7 @@ public class Modeller
      * @param objectFactory
      * @param mainNamespace
      */
-    private void addHierarchyNamespace(ObjectFactory objectFactory, Namespace mainNamespace)
+    private void addHierarchyNamespace(ObjectFactory objectFactory, Namespace mainNamespace) throws BIConfigException
     {
         // add hierarchy namespace
         Namespace hierarchyNamespace = objectFactory.createNamespace();
@@ -741,8 +789,9 @@ public class Modeller
         {
 
             // ignore any in config that dont exist
-            if (! hierarchyView.isExists()) {
-                 continue;
+            if (!hierarchyView.isExists())
+            {
+                continue;
             }
             // see if we have defined an alias
 
@@ -814,7 +863,7 @@ public class Modeller
 
                 idColumnDeterminant.setName(columnName);
                 StringBuilder keyStr = new StringBuilder();
-                keyStr.append("[Hierarchies].[").append(hierarchyView.getAlias()).append("].[").append(columnName).append("_ID]");
+                keyStr.append("[").append(ViewTypeEnum.HIERARCHY.getNamespace()).append("].[").append(hierarchyView.getAlias()).append("].[").append(columnName).append("_ID]");
                 columnSet.add(keyStr.toString());
                 for (String keyCol : columnSet)
                 {
@@ -823,7 +872,7 @@ public class Modeller
                 idColumnDeterminant.setKey(keyCollection);
 
                 StringBuilder attrStr = new StringBuilder();
-                attrStr.append("[Hierarchies].[").append(hierarchyView.getAlias()).append("].[").append(columnName).append("_NAME]");
+                attrStr.append("[").append(ViewTypeEnum.HIERARCHY.getNamespace()).append("].[").append(hierarchyView.getAlias()).append("].[").append(columnName).append("_NAME]");
                 attributeCollection.getRefobj().add(attrStr.toString());
                 idColumnDeterminant.setAttributes(attributeCollection);
                 determinants.getDeterminant().add(idColumnDeterminant);
@@ -837,7 +886,7 @@ public class Modeller
 
                 // add id column
                 log.finer("Adding query item : " + columnName + " to " + hierarchyView.getViewName());
-                QueryItem queryItem = createAttributeQueryItem(objectFactory,  columnName + "_ID", "attribute");
+                QueryItem queryItem = createAttributeQueryItem(objectFactory, columnName + "_ID", "attribute");
 //                queryItem.getName().add(createNameType(objectFactory, columnName + "_ID"));
 //                queryItem.setExternalName(columnName + "_ID");
 //                queryItem.setUsage("attribute");
@@ -853,7 +902,7 @@ public class Modeller
                 querySubject.getQueryItemOrQueryItemFolder().add(queryItem);
 
                 // add name column
-                queryItem =  createAttributeQueryItem(objectFactory,  columnName + "_NAME", "attribute");
+                queryItem = createAttributeQueryItem(objectFactory, columnName + "_NAME", "attribute");
 //                queryItem.getName().add(createNameType(objectFactory, columnName + "_NAME"));
 //                queryItem.setExternalName(columnName + "_NAME");
 //                queryItem.setUsage("attribute");
@@ -927,9 +976,11 @@ public class Modeller
      * @param role
      * @return
      */
-    private ReportObjectType createQueryItem(ObjectFactory objectFactory,String namespace, BIView view, String name, QueryItemType.Roles.Role role, boolean addExpression)
+    private ReportObjectType createQueryItem(ObjectFactory objectFactory, String namespace, BIView view, String name, QueryItemType.Roles.Role role, boolean addExpression)
     {
-        QueryItem queryItem = createAttributeQueryItem(objectFactory, name, "fact");
+        // if we end with _ID then we're an attribute //@todo find a better way to determine?
+        String type = (name.endsWith("_ID") || name.endsWith("_NAME")) ? "attribute" : "fact";
+        QueryItem queryItem = createAttributeQueryItem(objectFactory, name, type);
 
         // set roles - used for hierarchy levels (e,.g businessKey or memberCaption)
         if (role != null)
@@ -939,7 +990,7 @@ public class Modeller
             queryItem.setRoles(queryItemRoles);
         }
 
-        if ( addExpression)
+        if (addExpression)
         {
             // add query expression
             StringBuilder expression = new StringBuilder("[" + namespace + "].[").append(view.getAlias()).append("].[").append(name).append("]");
@@ -954,27 +1005,32 @@ public class Modeller
 
     /**
      * Create <queryItem> </queryItem> element
+     *
      * @param objectFactory
      * @param name
      * @param type
      * @return
      */
-    private QueryItem createAttributeQueryItem(ObjectFactory objectFactory,  String name, String type)
+    private QueryItem createAttributeQueryItem(ObjectFactory objectFactory, String name, String type)
     {
         QueryItem queryItem = objectFactory.createQueryItem();
         queryItem.getName().add(createNameType(objectFactory, name));
         setChangeTimeAndOwner(queryItem);
         queryItem.setUsage(type);
         queryItem.setExternalName(name);
-        if ( type.equalsIgnoreCase("fact")) {
+
+        if (type.equalsIgnoreCase("fact"))
+        {
             queryItem.setRegularAggregate(RegularAggregateType.SUM);
             queryItem.setSemiAggregate(RegularAggregateType.SUM);
             queryItem.setDatatype("decimal");
             queryItem.setPrecision(new BigInteger("31"));
             queryItem.setScale(new BigInteger("4"));
             queryItem.setSize(16l);
+            queryItem.setNullable(true);
 
-        } else
+        }
+        else
         {
             queryItem.setRegularAggregate(RegularAggregateType.UNSUPPORTED);
             queryItem.setSemiAggregate(RegularAggregateType.UNSUPPORTED);
@@ -982,6 +1038,7 @@ public class Modeller
             queryItem.setPrecision(new BigInteger("20"));
             queryItem.setScale(new BigInteger("0"));
             queryItem.setSize(42l);
+            queryItem.setNullable(false);
 
         }
 
@@ -1168,7 +1225,8 @@ public class Modeller
 
             idColumnDeterminant.setName(columnName + "_ID");
             StringBuilder keyStr = new StringBuilder();
-            keyStr.append("[Hierarchies].[").append(view.getViewName()).append("].[").append(columnName).append("_ID]");
+            String viewName = (overrideDisplayName == null) ? view.getViewName() : overrideDisplayName;
+            keyStr.append("[").append(parentNamespace.getName().get(0).getValue()).append("].[").append(viewName).append("].[").append(columnName).append("_ID]");
             columnSet.add(keyStr.toString());
             for (String keyCol : columnSet)
             {
@@ -1177,7 +1235,7 @@ public class Modeller
             idColumnDeterminant.setKey(keyCollection);
 
             StringBuilder attrStr = new StringBuilder();
-            attrStr.append("[Hierarchies].[").append(view.getViewName()).append("].[").append(columnName).append("_NAME]");
+            attrStr.append("[").append(parentNamespace.getName().get(0).getValue()).append("].[").append(viewName).append("].[").append(columnName).append("_NAME]");
             attributeCollection.getRefobj().add(attrStr.toString());
             idColumnDeterminant.setAttributes(attributeCollection);
             determinants.getDeterminant().add(idColumnDeterminant);
@@ -1194,13 +1252,13 @@ public class Modeller
             QueryItem queryItem = objectFactory.createQueryItem();
             queryItem.getName().add(createNameType(objectFactory, columnName + "_ID"));
             queryItem.setExternalName(columnName + "_ID");
-            queryItem.setSize(42l);
             queryItem.setUsage("attribute");
+            queryItem.setDatatype("characterLength16");
+            queryItem.setSize(42l);
+            queryItem.setScale(new BigInteger("0"));
             queryItem.setPrecision(new BigInteger("20"));
             queryItem.setSemiAggregate(RegularAggregateType.UNSUPPORTED);
             queryItem.setRegularAggregate(RegularAggregateType.UNSUPPORTED);
-
-            queryItem.setDatatype("characterLength16");
             setChangeTimeAndOwner(queryItem);
             querySubject.getQueryItemOrQueryItemFolder().add(queryItem);
 
@@ -1208,7 +1266,14 @@ public class Modeller
             queryItem = objectFactory.createQueryItem();
             queryItem.getName().add(createNameType(objectFactory, columnName + "_NAME"));
             queryItem.setExternalName(columnName + "_NAME");
-            queryItem.setSize(62l);
+            queryItem.setUsage("attribute");
+            queryItem.setDatatype("characterLength16");
+            queryItem.setSize(42l);
+            queryItem.setScale(new BigInteger("0"));
+            queryItem.setPrecision(new BigInteger("20"));
+            queryItem.setSemiAggregate(RegularAggregateType.UNSUPPORTED);
+            queryItem.setRegularAggregate(RegularAggregateType.UNSUPPORTED);
+            setChangeTimeAndOwner(queryItem);
             querySubject.getQueryItemOrQueryItemFolder().add(queryItem);
         }
 
@@ -1222,11 +1287,13 @@ public class Modeller
 
     /**
      * Add a plan entry
+     *
      * @param objectFactory
      * @param parentNamespace
      * @param view
      */
-    private void addPlanEntry(ObjectFactory objectFactory, Namespace parentNamespace, BIView view) {
+    private void addPlanEntry(ObjectFactory objectFactory, Namespace parentNamespace, BIView view)
+    {
         QuerySubject querySubject = objectFactory.createQuerySubject();
 
 
@@ -1234,7 +1301,7 @@ public class Modeller
         String attributeDisplayName = (view.getAlias() == null) ? view.getViewName() : view.getAlias();
 
         querySubject.getName().add(createNameType(objectFactory, attributeDisplayName));
-        querySubject.setStatus(StatusType.NEEDS_REEVALUATION);
+        querySubject.setStatus(StatusType.VALID);
         setChangeTimeAndOwner(querySubject);
         parentNamespace.getFolderOrFunctionOrNamespace().add(querySubject);
 
@@ -1262,14 +1329,14 @@ public class Modeller
         // add all columns of the attribute table
         for (String attrColumnName : toolkit.getTableColumns(view.getSourceTable(), ALL_COLUMNS))
         {
-            querySubject.getQueryItemOrQueryItemFolder().add(createQueryItem(objectFactory,"Plans", view, attrColumnName, null,false));
+            querySubject.getQueryItemOrQueryItemFolder().add(createQueryItem(objectFactory, ViewTypeEnum.PLAN.getNamespace(), view, attrColumnName, null, false));
         }
     }
 
 
     /**
      * Generate a query block
-     *
+     * <p/>
      * <dbQuery>
      * <sources>
      * <dataSourceRef>[].[dataSources].[Assortment planning]</dataSourceRef>
@@ -1282,7 +1349,8 @@ public class Modeller
      * @param tableName
      * @return
      */
-    private DefinitionType.DbQuery getQuery(ObjectFactory objectFactory, String tableName) {
+    private DefinitionType.DbQuery getQuery(ObjectFactory objectFactory, String tableName)
+    {
         DefinitionType.DbQuery query = objectFactory.createDefinitionTypeDbQuery();
 
         SqlType sqlType = objectFactory.createSqlType();

@@ -1,11 +1,11 @@
 package com.jda.ap.bi;
 
 import com.jda.ap.bi.cognos.config.CognosServiceConfig;
-import com.jda.ap.bi.cognos.exception.BIConfigException;
 import com.jda.ap.bi.cognos.exception.FrameworkManagerException;
 import com.jda.ap.bi.enums.ModelCommandEnum;
 import com.jda.ap.bi.enums.ScriptPlaceholderEnum;
 import com.jda.ap.bi.modeller.Modeller;
+import com.jda.ap.exception.BIConfigException;
 
 import java.io.File;
 import java.util.Map;

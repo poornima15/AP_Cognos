@@ -33,11 +33,11 @@ import javax.xml.bind.annotation.XmlType;
     "cognos"
 })
 @XmlRootElement(name = "BI")
-@Generated(value = "com.sun.tools.internal.xjc.Driver", date = "2014-07-31T10:48:19-06:00", comments = "JAXB RI v2.2.4-2")
+@Generated(value = "com.sun.tools.internal.xjc.Driver", date = "2014-08-04T04:29:47-06:00", comments = "JAXB RI v2.2.4-2")
 public class BI {
 
     @XmlElement(name = "Cognos", required = true)
-    @Generated(value = "com.sun.tools.internal.xjc.Driver", date = "2014-07-31T10:48:19-06:00", comments = "JAXB RI v2.2.4-2")
+    @Generated(value = "com.sun.tools.internal.xjc.Driver", date = "2014-08-04T04:29:47-06:00", comments = "JAXB RI v2.2.4-2")
     protected Cognos cognos;
 
     /**
@@ -48,7 +48,7 @@ public class BI {
      *     {@link Cognos }
      *     
      */
-    @Generated(value = "com.sun.tools.internal.xjc.Driver", date = "2014-07-31T10:48:19-06:00", comments = "JAXB RI v2.2.4-2")
+    @Generated(value = "com.sun.tools.internal.xjc.Driver", date = "2014-08-04T04:29:47-06:00", comments = "JAXB RI v2.2.4-2")
     public Cognos getCognos() {
         return cognos;
     }
@@ -61,7 +61,7 @@ public class BI {
      *     {@link Cognos }
      *     
      */
-    @Generated(value = "com.sun.tools.internal.xjc.Driver", date = "2014-07-31T10:48:19-06:00", comments = "JAXB RI v2.2.4-2")
+    @Generated(value = "com.sun.tools.internal.xjc.Driver", date = "2014-08-04T04:29:47-06:00", comments = "JAXB RI v2.2.4-2")
     public void setCognos(Cognos value) {
         this.cognos = value;
     }
